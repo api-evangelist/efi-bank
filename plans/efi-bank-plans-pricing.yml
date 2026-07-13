@@ -1,0 +1,141 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Efí
+providerId: efi-bank
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Payments
+- Pix
+- Boleto
+- Banking
+- Brazil
+- Plans
+description: >-
+  Efí (formerly Gerencianet) does not sell API access as tiered subscription
+  plans. The APIs (Pix, Cobranças, Carnê, Open Finance) are included with an Efí
+  digital account and are billed per successful transaction rather than by an API
+  plan. Opening the account and generating credentials/certificates is free;
+  generating charges and boletos is free; you pay a fee only when a transaction is
+  settled. The "plans" below therefore describe the account/transaction model, not
+  API rate tiers. All monetary values are in Brazilian Reais (BRL) and are NOT
+  reconciled here - verify current tariffs on the Efí tarifas page, as rates and
+  free allowances change and can be negotiated by volume.
+notes: >-
+  Pricing is per-transaction, not per-API-call. Figures reflect publicly
+  advertised standard rates as of the review date and are unreconciled. Custom /
+  negotiated pricing is available for higher volumes. See finops/ for the FinOps
+  view and rate-limits/ for throughput behavior.
+sources:
+- https://sejaefi.com.br/tarifas
+- https://sejaefi.com.br/central-de-ajuda/tarifas-e-prazos
+- https://dev.efipay.com.br/docs/api-pix/credenciais
+plans:
+- id: efi-account
+  name: Efí Digital Account (API access included)
+  type: free
+  description: >-
+    Free Efí account that includes API credentials for Pix, Cobranças, Carnê,
+    and (for partners) Open Finance. No subscription or API plan fee; generating
+    the OAuth2 credentials and the Pix mTLS certificate is free. Revenue is
+    earned per settled transaction (see usage plans below).
+  entries:
+  - label: API Access and Credentials
+    name: api_access
+    type: flat
+    metric: account
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: free (per-transaction billing applies)
+    userMultiplied: false
+  elements:
+  - name: Pix API
+  - name: Cobranças (Charges) API
+  - name: Carnê API
+  - name: Pix via Open Finance API (partner)
+  - name: Sandbox / Homologação Environment
+- id: efi-pix-usage
+  name: Pix - Per Transaction
+  type: usage
+  description: >-
+    Pix charges (Pix Cob and Pix CobV) received via API are billed as a
+    percentage of the transaction. Efí advertises 30 free Pix per month via the
+    app for PJ accounts; API-received Pix follow the percentage tariff.
+    Percentage is unreconciled - verify on the tarifas page.
+  entries:
+  - label: Pix Received via API (Cob / CobV)
+    name: pix_received
+    type: usage
+    metric: transaction
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: ~1.19% per settled Pix (standard advertised rate; unreconciled)
+    userMultiplied: false
+  - label: Pix Automático Settlement
+    name: pix_automatico
+    type: usage
+    metric: transaction
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: ~R$3.50 per settled automatic Pix (advertised; unreconciled)
+    userMultiplied: false
+  elements:
+  - name: Dynamic QR Code
+  - name: Pix Copia e Cola
+  - name: Cash-In and Cash-Out
+- id: efi-boleto-usage
+  name: Boleto / Carnê - Per Settlement
+  type: usage
+  description: >-
+    Boletos and carnê parcels are free to generate; a fixed confirmation fee is
+    charged only when a boleto or parcel is actually paid, regardless of the
+    amount. Fee is unreconciled - verify on the tarifas page.
+  entries:
+  - label: Boleto / Carnê Parcel Settlement
+    name: boleto_settlement
+    type: usage
+    metric: transaction
+    limit: -1
+    timeFrame: month
+    geo: BR
+    unit: 1
+    price: ~R$3.45 fixed per paid boleto / carnê parcel (advertised; unreconciled)
+    userMultiplied: false
+  elements:
+  - name: Free Boleto Generation
+  - name: Bolix (Boleto with Pix)
+  - name: Installment Carnês
+- id: efi-custom
+  name: Negotiated / High Volume
+  type: enterprise
+  description: >-
+    Custom per-transaction rates and free-Pix allowances negotiated for
+    high-volume merchants, marketplaces (payment split), and partners using
+    account-opening and Open Finance APIs. Contact Efí.
+  entries:
+  - label: Negotiated Agreement
+    name: negotiated
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: BR
+    unit: 1
+    price: contact Efí
+    userMultiplied: false
+  elements:
+  - name: Volume Pricing
+  - name: Payment Split (Marketplace)
+  - name: Open Finance Payment Initiation
+  - name: Account Opening API
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

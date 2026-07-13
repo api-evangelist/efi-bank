@@ -1,0 +1,357 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": { "name": "Authorization", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Authorize (Pix).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/oauth/token",
+            "auth": { "type": "basic", "username": "{{clientId}}", "password": "{{clientSecret}}" },
+            "body": { "type": "json", "data": "{\n  \"grant_type\": \"client_credentials\"\n}" }
+          },
+          "docs": "OAuth2 client-credentials token for the Pix host. Requires the mTLS client certificate on the request."
+        },
+        {
+          "info": { "name": "Authorize (Cobranças).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://cobrancas.api.efipay.com.br/v1/authorize",
+            "auth": { "type": "basic", "username": "{{clientId}}", "password": "{{clientSecret}}" },
+            "body": { "type": "json", "data": "{\n  \"grant_type\": \"client_credentials\"\n}" }
+          },
+          "docs": "OAuth2 client-credentials token for the Cobranças host. No mTLS required."
+        },
+        {
+          "info": { "name": "Authorize (Open Finance).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://openfinance.api.efipay.com.br/v1/oauth/token",
+            "auth": { "type": "basic", "username": "{{clientId}}", "password": "{{clientSecret}}" },
+            "body": { "type": "json", "data": "{\n  \"grant_type\": \"client_credentials\"\n}" }
+          },
+          "docs": "OAuth2 client-credentials token for the Open Finance host. Requires the mTLS client certificate."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Pix Charges", "type": "folder" },
+      "request": { "auth": { "type": "bearer", "token": "{{pixToken}}" } },
+      "items": [
+        {
+          "info": { "name": "Create immediate charge (no txid).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v2/cob",
+            "body": { "type": "json", "data": "{\n  \"calendario\": { \"expiracao\": 3600 },\n  \"valor\": { \"original\": \"123.45\" },\n  \"chave\": \"minha-chave-pix\"\n}" }
+          },
+          "docs": "Creates an immediate Pix charge (cob) with a server-generated txid. Scope cob.write."
+        },
+        {
+          "info": { "name": "Create immediate charge (with txid).", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/cob/:txid",
+            "params": [ { "name": "txid", "value": "", "type": "path", "description": "Transaction identifier (26-35 chars)." } ],
+            "body": { "type": "json", "data": "{\n  \"valor\": { \"original\": \"123.45\" },\n  \"chave\": \"minha-chave-pix\"\n}" }
+          },
+          "docs": "Creates an immediate Pix charge with a caller-supplied txid. Scope cob.write."
+        },
+        {
+          "info": { "name": "Revise immediate charge.", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://pix.api.efipay.com.br/v2/cob/:txid",
+            "params": [ { "name": "txid", "value": "", "type": "path", "description": "Transaction identifier." } ],
+            "body": { "type": "json", "data": "{\n  \"valor\": { \"original\": \"150.00\" }\n}" }
+          },
+          "docs": "Revises an immediate Pix charge, creating a new revision. Scope cob.write."
+        },
+        {
+          "info": { "name": "Get immediate charge.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/cob/:txid",
+            "params": [ { "name": "txid", "value": "", "type": "path", "description": "Transaction identifier." } ]
+          },
+          "docs": "Retrieves an immediate Pix charge by txid. Scope cob.read."
+        },
+        {
+          "info": { "name": "List immediate charges.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/cob?inicio=2026-07-01T00:00:00Z&fim=2026-07-12T23:59:59Z",
+            "params": [
+              { "name": "inicio", "value": "2026-07-01T00:00:00Z", "type": "query", "description": "Start of interval (mandatory)." },
+              { "name": "fim", "value": "2026-07-12T23:59:59Z", "type": "query", "description": "End of interval (mandatory)." }
+            ]
+          },
+          "docs": "Lists immediate Pix charges over a date range. Scope cob.read."
+        },
+        {
+          "info": { "name": "Create dated charge (cobv) [modeled - BACEN Pix v2].", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/cobv/:txid",
+            "params": [ { "name": "txid", "value": "", "type": "path", "description": "Transaction identifier." } ],
+            "body": { "type": "json", "data": "{\n  \"calendario\": { \"dataDeVencimento\": \"2026-08-01\" },\n  \"valor\": { \"original\": \"200.00\" },\n  \"chave\": \"minha-chave-pix\"\n}" }
+          },
+          "docs": "Creates a dated Pix charge (cobv). Modeled on the BACEN Pix API v2 standard Efí implements. Scope cobv.write."
+        },
+        {
+          "info": { "name": "Create payload location (loc) [modeled - BACEN Pix v2].", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v2/loc",
+            "body": { "type": "json", "data": "{\n  \"tipoCob\": \"cob\"\n}" }
+          },
+          "docs": "Creates a payload location for the dynamic QR Code. Modeled on the BACEN Pix API v2 standard. Scope loc.write."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Pix Payments", "type": "folder" },
+      "request": { "auth": { "type": "bearer", "token": "{{pixToken}}" } },
+      "items": [
+        {
+          "info": { "name": "List received Pix [modeled - BACEN Pix v2].", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/pix?inicio=2026-07-01T00:00:00Z&fim=2026-07-12T23:59:59Z",
+            "params": [
+              { "name": "inicio", "value": "2026-07-01T00:00:00Z", "type": "query", "description": "Start of interval (mandatory)." },
+              { "name": "fim", "value": "2026-07-12T23:59:59Z", "type": "query", "description": "End of interval (mandatory)." }
+            ]
+          },
+          "docs": "Lists received Pix (Cash-In). Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+        },
+        {
+          "info": { "name": "Get received Pix by e2eid [modeled - BACEN Pix v2].", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/pix/:e2eid",
+            "params": [ { "name": "e2eid", "value": "", "type": "path", "description": "End-to-end identifier." } ]
+          },
+          "docs": "Retrieves a single received Pix by end-to-end id. Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+        },
+        {
+          "info": { "name": "Request refund (devolução) [modeled - BACEN Pix v2].", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/pix/:e2eid/devolucao/:id",
+            "params": [
+              { "name": "e2eid", "value": "", "type": "path", "description": "End-to-end identifier." },
+              { "name": "id", "value": "", "type": "path", "description": "Client refund identifier." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"valor\": \"12.34\"\n}" }
+          },
+          "docs": "Requests a refund for a received Pix. Modeled on the BACEN Pix API v2 standard. Scope pix.write."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Pix Webhooks", "type": "folder" },
+      "request": { "auth": { "type": "bearer", "token": "{{pixToken}}" } },
+      "items": [
+        {
+          "info": { "name": "Configure webhook.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/webhook/:chave",
+            "params": [ { "name": "chave", "value": "", "type": "path", "description": "Pix key the webhook is associated with." } ],
+            "body": { "type": "json", "data": "{\n  \"webhookUrl\": \"https://example.com/efi/webhook\"\n}" }
+          },
+          "docs": "Registers the callback URL for received-Pix notifications on a Pix key. Scope webhook.write."
+        },
+        {
+          "info": { "name": "Get webhook.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/webhook/:chave",
+            "params": [ { "name": "chave", "value": "", "type": "path", "description": "Pix key." } ]
+          },
+          "docs": "Retrieves the webhook configured for a Pix key. Scope webhook.read."
+        },
+        {
+          "info": { "name": "Delete webhook.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://pix.api.efipay.com.br/v2/webhook/:chave",
+            "params": [ { "name": "chave", "value": "", "type": "path", "description": "Pix key." } ]
+          },
+          "docs": "Cancels the webhook for a Pix key. Scope webhook.write."
+        },
+        {
+          "info": { "name": "List webhooks.", "type": "http" },
+          "http": { "method": "GET", "url": "https://pix.api.efipay.com.br/v2/webhook" },
+          "docs": "Lists webhooks associated with Pix keys. Scope webhook.read."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Cobranças", "type": "folder" },
+      "request": { "auth": { "type": "bearer", "token": "{{cobrancasToken}}" } },
+      "items": [
+        {
+          "info": { "name": "Create charge (two-step).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge",
+            "body": { "type": "json", "data": "{\n  \"items\": [ { \"name\": \"Produto 1\", \"value\": 1000, \"amount\": 2 } ]\n}" }
+          },
+          "docs": "Creates a charge (item, value in cents, quantity) before associating a payment method."
+        },
+        {
+          "info": { "name": "Create charge (one-step).", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge/one-step",
+            "body": { "type": "json", "data": "{\n  \"items\": [ { \"name\": \"Produto 1\", \"value\": 1000, \"amount\": 1 } ],\n  \"payment\": { \"banking_billet\": { \"expire_at\": \"2026-08-01\" } }\n}" }
+          },
+          "docs": "Creates a charge and associates the payment method in one request."
+        },
+        {
+          "info": { "name": "Associate payment method to charge.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge/:id/pay",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Charge identifier." } ],
+            "body": { "type": "json", "data": "{\n  \"payment\": { \"banking_billet\": { \"expire_at\": \"2026-08-01\" } }\n}" }
+          },
+          "docs": "Associates a charge with the desired payment method."
+        },
+        {
+          "info": { "name": "Get charge.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge/:id",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Charge identifier." } ]
+          },
+          "docs": "Returns information for a single charge by id."
+        },
+        {
+          "info": { "name": "List charges.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charges?begin_date=2026-07-01&end_date=2026-07-12",
+            "params": [
+              { "name": "begin_date", "value": "2026-07-01", "type": "query", "description": "Start date filter." },
+              { "name": "end_date", "value": "2026-07-12", "type": "query", "description": "End date filter." }
+            ]
+          },
+          "docs": "Returns issued charges filtered by charge_type and date range."
+        },
+        {
+          "info": { "name": "Change boleto due date.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge/:id/billet",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Charge identifier." } ],
+            "body": { "type": "json", "data": "{\n  \"expire_at\": \"2026-08-15\"\n}" }
+          },
+          "docs": "Alters the expiration date of a boleto charge."
+        },
+        {
+          "info": { "name": "Cancel charge.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge/:id/cancel",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Charge identifier." } ]
+          },
+          "docs": "Cancels an existing charge."
+        },
+        {
+          "info": { "name": "Settle charge (baixa manual).", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://cobrancas.api.efipay.com.br/v1/charge/:id/settle",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Charge identifier." } ]
+          },
+          "docs": "Marks a charge as paid (baixa manual)."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Carnê", "type": "folder" },
+      "request": { "auth": { "type": "bearer", "token": "{{cobrancasToken}}" } },
+      "items": [
+        {
+          "info": { "name": "Create carnê.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://cobrancas.api.efipay.com.br/v1/carnet",
+            "body": { "type": "json", "data": "{\n  \"items\": [ { \"name\": \"Parcela\", \"value\": 5000, \"amount\": 1 } ],\n  \"repeats\": 12,\n  \"expire_at\": \"2026-08-01\"\n}" }
+          },
+          "docs": "Creates a carnê - a batch of installment charges (parcelas)."
+        },
+        {
+          "info": { "name": "Get carnê.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://cobrancas.api.efipay.com.br/v1/carnet/:id",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Carnê identifier." } ]
+          },
+          "docs": "Returns information for an existing carnê by id."
+        },
+        {
+          "info": { "name": "Change parcel due date.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://cobrancas.api.efipay.com.br/v1/carnet/:id/parcel/:parcel",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "Carnê identifier." },
+              { "name": "parcel", "value": "1", "type": "path", "description": "Installment (parcela) number." }
+            ],
+            "body": { "type": "json", "data": "{\n  \"expire_at\": \"2026-09-01\"\n}" }
+          },
+          "docs": "Alters the expiration date of a specific carnê parcel."
+        },
+        {
+          "info": { "name": "Cancel carnê.", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://cobrancas.api.efipay.com.br/v1/carnet/:id/cancel",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Carnê identifier." } ]
+          },
+          "docs": "Cancels an entire carnê."
+        },
+        {
+          "info": { "name": "Settle carnê (baixa manual).", "type": "http" },
+          "http": {
+            "method": "PUT",
+            "url": "https://cobrancas.api.efipay.com.br/v1/carnet/:id/settle",
+            "params": [ { "name": "id", "value": "", "type": "path", "description": "Carnê identifier." } ]
+          },
+          "docs": "Marks an entire carnê as paid (baixa manual)."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Open Finance", "type": "folder" },
+      "request": { "auth": { "type": "bearer", "token": "{{openFinanceToken}}" } },
+      "items": [
+        {
+          "info": { "name": "List participants [modeled - representative path].", "type": "http" },
+          "http": { "method": "GET", "url": "https://openfinance.api.efipay.com.br/v1/open-finance/participants" },
+          "docs": "Lists Open Finance participants. Representative path from documented scope gn.opb.participants.read."
+        },
+        {
+          "info": { "name": "Initiate Pix via Open Finance [modeled - representative path].", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://openfinance.api.efipay.com.br/v1/open-finance/payments/pix",
+            "body": { "type": "json", "data": "{\n  \"payer\": { \"participant\": \"participant-id\" },\n  \"pix\": { \"valor\": \"100.00\", \"chave\": \"chave-destino\" }\n}" }
+          },
+          "docs": "Initiates a Pix payment via Open Finance. Representative path from documented scope gn.opb.payment.pix.send."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,60 @@
+generated: '2026-07-12'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: sejaefi.com.br
+  https: true
+  tls_version: TLSv1.3
+  cert_issuer: Google Trust Services (WE1)
+  cert_expires: Aug 14 11:15:13 2026 GMT
+  hsts: false
+  http_status: 200
+- host: dev.efipay.com.br
+  https: true
+  tls_version: TLSv1.3
+  cert_issuer: Google Trust Services (WE1)
+  cert_expires: Aug 17 12:21:14 2026 GMT
+  hsts: true
+  hsts_max_age: 31536000
+  hsts_preload: true
+  http_status: 200
+- host: pix.api.efipay.com.br
+  https: true
+  tls_version: TLSv1.3
+  cert_issuer: GlobalSign RSA OV SSL CA 2018
+  cert_expires: Dec  6 17:16:54 2026 GMT
+  hsts: false
+  mtls_required: true
+  note: Mutual TLS client certificate required; plain HTTPS request without a client cert does not return a normal HTTP response.
+- host: cobrancas.api.efipay.com.br
+  https: true
+  tls_version: TLSv1.3
+  cert_issuer: GlobalSign RSA OV SSL CA 2018
+  cert_expires: Dec  6 17:16:54 2026 GMT
+  hsts: false
+  mtls_required: false
+  http_status: 404
+  note: Root path returns 404; the API is served under versioned paths (e.g. /v1/authorize).
+- host: openfinance.api.efipay.com.br
+  https: true
+  tls_version: TLSv1.3
+  cert_issuer: GlobalSign RSA OV SSL CA 2018
+  cert_expires: Dec  6 17:16:54 2026 GMT
+  hsts: false
+  mtls_required: true
+  note: Mutual TLS client certificate required on every request.
+domains:
+- domain: sejaefi.com.br
+  dnssec: true
+  caa: []
+  spf: true
+  spf_record: v=spf1 include:spf.protection.outlook.com include:_spf.salesforce.com -all
+  dmarc: true
+  dmarc_policy: reject
+- domain: efipay.com.br
+  dnssec: false
+  caa: []
+  spf: true
+  spf_record: v=spf1 -all
+  dmarc: true
+  dmarc_policy: reject

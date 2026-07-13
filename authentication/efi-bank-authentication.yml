@@ -1,0 +1,43 @@
+generated: '2026-07-12'
+method: derived
+source: openapi/efi-bank-openapi.yml
+summary:
+  types:
+  - oauth2
+  - mutualTLS
+schemes:
+- name: oAuth2ClientCredentials
+  type: oauth2
+  flow: clientCredentials
+  description: >-
+    OAuth2 client-credentials across all Efí hosts. Obtain a bearer token from
+    the host's token endpoint using HTTP Basic auth with Client_Id and
+    Client_Secret, then send it as `Authorization: Bearer`. Token endpoints
+    differ per host: Pix `POST /oauth/token`
+    (https://pix.api.efipay.com.br), Cobranças `POST /v1/authorize`
+    (https://cobrancas.api.efipay.com.br), Open Finance `POST /v1/oauth/token`
+    (https://openfinance.api.efipay.com.br). Access is scoped (cob.write,
+    cob.read, pix.read, pix.send, webhook.write, gn.opb.payment.pix.send, etc).
+  sources:
+  - openapi/efi-bank-openapi.yml
+  - https://dev.efipay.com.br/docs/api-pix/credenciais
+  - https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+- name: mutualTLS
+  type: mutualTLS
+  description: >-
+    Mutual TLS (mTLS) client certificate is MANDATORY on every request to the
+    Pix and Open Finance hosts, including the OAuth2 token request. Efí issues a
+    `.p12` (PKCS#12) certificate in the account dashboard, which can be converted
+    to `.pem`. This is a Brazilian Central Bank (BACEN) requirement for the Pix
+    arrangement, not an Efí-specific choice. The Cobranças (Charges / Carnê) host
+    does NOT require mTLS - OAuth2 alone is sufficient there. mTLS cannot be fully
+    expressed as an OpenAPI 3.0 security scheme, so it is documented separately
+    here and in prose within the OpenAPI description.
+  requiredOnHosts:
+  - https://pix.api.efipay.com.br
+  - https://openfinance.api.efipay.com.br
+  notRequiredOnHosts:
+  - https://cobrancas.api.efipay.com.br
+  sources:
+  - https://dev.efipay.com.br/docs/api-pix/credenciais
+  - https://dev.efipay.com.br/docs/api-open-finance/credenciais

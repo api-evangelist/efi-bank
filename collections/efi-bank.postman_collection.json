@@ -1,0 +1,368 @@
+{
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments API",
+    "description": "Representative subset of Efí's public REST APIs. Three hosts: Pix (https://pix.api.efipay.com.br, OAuth2 + mandatory mTLS certificate), Cobranças/Charges (https://cobrancas.api.efipay.com.br, OAuth2 only), and Pix via Open Finance (https://openfinance.api.efipay.com.br, OAuth2 + mandatory mTLS). Set the {{pixToken}}, {{cobrancasToken}}, and {{openFinanceToken}} bearer variables after calling the matching Authorize request. NOTE: the Pix and Open Finance hosts require a client TLS certificate (.p12/.pem) configured in Postman under Settings > Certificates; this is a Brazilian Central Bank requirement.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "pixBaseUrl", "value": "https://pix.api.efipay.com.br", "type": "string" },
+    { "key": "cobrancasBaseUrl", "value": "https://cobrancas.api.efipay.com.br", "type": "string" },
+    { "key": "openFinanceBaseUrl", "value": "https://openfinance.api.efipay.com.br", "type": "string" },
+    { "key": "clientId", "value": "", "type": "string" },
+    { "key": "clientSecret", "value": "", "type": "string" },
+    { "key": "pixToken", "value": "", "type": "string" },
+    { "key": "cobrancasToken", "value": "", "type": "string" },
+    { "key": "openFinanceToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Authorization",
+      "item": [
+        {
+          "name": "Authorize (Pix)",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "basic", "basic": [ { "key": "username", "value": "{{clientId}}" }, { "key": "password", "value": "{{clientSecret}}" } ] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"grant_type\": \"client_credentials\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/oauth/token", "host": ["{{pixBaseUrl}}"], "path": ["oauth", "token"] },
+            "description": "OAuth2 client-credentials token for the Pix host. Requires the mTLS client certificate."
+          }
+        },
+        {
+          "name": "Authorize (Cobranças)",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "basic", "basic": [ { "key": "username", "value": "{{clientId}}" }, { "key": "password", "value": "{{clientSecret}}" } ] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"grant_type\": \"client_credentials\"\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/authorize", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "authorize"] },
+            "description": "OAuth2 client-credentials token for the Cobranças host. No mTLS required."
+          }
+        },
+        {
+          "name": "Authorize (Open Finance)",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "basic", "basic": [ { "key": "username", "value": "{{clientId}}" }, { "key": "password", "value": "{{clientSecret}}" } ] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"grant_type\": \"client_credentials\"\n}" },
+            "url": { "raw": "{{openFinanceBaseUrl}}/v1/oauth/token", "host": ["{{openFinanceBaseUrl}}"], "path": ["v1", "oauth", "token"] },
+            "description": "OAuth2 client-credentials token for the Open Finance host. Requires the mTLS client certificate."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pix Charges",
+      "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{pixToken}}", "type": "string" } ] },
+      "item": [
+        {
+          "name": "Create immediate charge (no txid)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"calendario\": { \"expiracao\": 3600 },\n  \"devedor\": { \"cpf\": \"12345678909\", \"nome\": \"Fulano de Tal\" },\n  \"valor\": { \"original\": \"123.45\" },\n  \"chave\": \"minha-chave-pix\",\n  \"solicitacaoPagador\": \"Cobrança dos servicos.\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/cob", "host": ["{{pixBaseUrl}}"], "path": ["v2", "cob"] },
+            "description": "Creates an immediate Pix charge (cob) with a server-generated txid. Scope cob.write."
+          }
+        },
+        {
+          "name": "Create immediate charge (with txid)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"calendario\": { \"expiracao\": 3600 },\n  \"valor\": { \"original\": \"123.45\" },\n  \"chave\": \"minha-chave-pix\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/cob/:txid", "host": ["{{pixBaseUrl}}"], "path": ["v2", "cob", ":txid"], "variable": [{ "key": "txid", "value": "" }] },
+            "description": "Creates an immediate Pix charge with a caller-supplied txid (26-35 chars). Scope cob.write."
+          }
+        },
+        {
+          "name": "Revise immediate charge",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"valor\": { \"original\": \"150.00\" }\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/cob/:txid", "host": ["{{pixBaseUrl}}"], "path": ["v2", "cob", ":txid"], "variable": [{ "key": "txid", "value": "" }] },
+            "description": "Revises an immediate Pix charge, creating a new revision. Scope cob.write."
+          }
+        },
+        {
+          "name": "Get immediate charge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/cob/:txid", "host": ["{{pixBaseUrl}}"], "path": ["v2", "cob", ":txid"], "variable": [{ "key": "txid", "value": "" }] },
+            "description": "Retrieves an immediate Pix charge by txid. Scope cob.read."
+          }
+        },
+        {
+          "name": "List immediate charges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/cob?inicio=2026-07-01T00:00:00Z&fim=2026-07-12T23:59:59Z", "host": ["{{pixBaseUrl}}"], "path": ["v2", "cob"], "query": [{ "key": "inicio", "value": "2026-07-01T00:00:00Z" }, { "key": "fim", "value": "2026-07-12T23:59:59Z" }] },
+            "description": "Lists immediate Pix charges over a date range (inicio and fim mandatory). Scope cob.read."
+          }
+        },
+        {
+          "name": "Create dated charge (cobv) [modeled - BACEN Pix v2]",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"calendario\": { \"dataDeVencimento\": \"2026-08-01\", \"validadeAposVencimento\": 30 },\n  \"devedor\": { \"cpf\": \"12345678909\", \"nome\": \"Fulano de Tal\" },\n  \"valor\": { \"original\": \"200.00\" },\n  \"chave\": \"minha-chave-pix\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/cobv/:txid", "host": ["{{pixBaseUrl}}"], "path": ["v2", "cobv", ":txid"], "variable": [{ "key": "txid", "value": "" }] },
+            "description": "Creates a dated Pix charge (cobv). Modeled on the BACEN Pix API v2 standard Efí implements. Scope cobv.write."
+          }
+        },
+        {
+          "name": "Create payload location (loc) [modeled - BACEN Pix v2]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"tipoCob\": \"cob\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/loc", "host": ["{{pixBaseUrl}}"], "path": ["v2", "loc"] },
+            "description": "Creates a payload location used to generate the dynamic QR Code. Modeled on the BACEN Pix API v2 standard. Scope loc.write."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pix Payments",
+      "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{pixToken}}", "type": "string" } ] },
+      "item": [
+        {
+          "name": "List received Pix [modeled - BACEN Pix v2]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/pix?inicio=2026-07-01T00:00:00Z&fim=2026-07-12T23:59:59Z", "host": ["{{pixBaseUrl}}"], "path": ["v2", "pix"], "query": [{ "key": "inicio", "value": "2026-07-01T00:00:00Z" }, { "key": "fim", "value": "2026-07-12T23:59:59Z" }] },
+            "description": "Lists received Pix (Cash-In) over a date range. Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+          }
+        },
+        {
+          "name": "Get received Pix by e2eid [modeled - BACEN Pix v2]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/pix/:e2eid", "host": ["{{pixBaseUrl}}"], "path": ["v2", "pix", ":e2eid"], "variable": [{ "key": "e2eid", "value": "" }] },
+            "description": "Retrieves a single received Pix by end-to-end id. Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+          }
+        },
+        {
+          "name": "Request refund (devolução) [modeled - BACEN Pix v2]",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"valor\": \"12.34\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/pix/:e2eid/devolucao/:id", "host": ["{{pixBaseUrl}}"], "path": ["v2", "pix", ":e2eid", "devolucao", ":id"], "variable": [{ "key": "e2eid", "value": "" }, { "key": "id", "value": "" }] },
+            "description": "Requests a refund for a received Pix. Modeled on the BACEN Pix API v2 standard. Scope pix.write."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pix Webhooks",
+      "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{pixToken}}", "type": "string" } ] },
+      "item": [
+        {
+          "name": "Configure webhook",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"webhookUrl\": \"https://example.com/efi/webhook\"\n}" },
+            "url": { "raw": "{{pixBaseUrl}}/v2/webhook/:chave", "host": ["{{pixBaseUrl}}"], "path": ["v2", "webhook", ":chave"], "variable": [{ "key": "chave", "value": "" }] },
+            "description": "Registers the callback URL for received-Pix notifications on a Pix key. Scope webhook.write."
+          }
+        },
+        {
+          "name": "Get webhook",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/webhook/:chave", "host": ["{{pixBaseUrl}}"], "path": ["v2", "webhook", ":chave"], "variable": [{ "key": "chave", "value": "" }] },
+            "description": "Retrieves the webhook configured for a Pix key. Scope webhook.read."
+          }
+        },
+        {
+          "name": "Delete webhook",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/webhook/:chave", "host": ["{{pixBaseUrl}}"], "path": ["v2", "webhook", ":chave"], "variable": [{ "key": "chave", "value": "" }] },
+            "description": "Cancels the webhook for a Pix key. Scope webhook.write."
+          }
+        },
+        {
+          "name": "List webhooks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{pixBaseUrl}}/v2/webhook", "host": ["{{pixBaseUrl}}"], "path": ["v2", "webhook"] },
+            "description": "Lists webhooks associated with Pix keys. Scope webhook.read."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cobranças",
+      "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{cobrancasToken}}", "type": "string" } ] },
+      "item": [
+        {
+          "name": "Create charge (two-step)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"items\": [\n    { \"name\": \"Produto 1\", \"value\": 1000, \"amount\": 2 }\n  ]\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge"] },
+            "description": "Creates a charge (item, value in cents, quantity) before associating a payment method."
+          }
+        },
+        {
+          "name": "Create charge (one-step)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"items\": [ { \"name\": \"Produto 1\", \"value\": 1000, \"amount\": 1 } ],\n  \"payment\": { \"banking_billet\": { \"expire_at\": \"2026-08-01\", \"customer\": { \"name\": \"Fulano de Tal\", \"cpf\": \"12345678909\" } } }\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge/one-step", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge", "one-step"] },
+            "description": "Creates a charge and associates the payment method (boleto, card, or Pix) in one request."
+          }
+        },
+        {
+          "name": "Associate payment method to charge",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"payment\": { \"banking_billet\": { \"expire_at\": \"2026-08-01\" } }\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge/:id/pay", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge", ":id", "pay"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Associates a charge with the desired payment method."
+          }
+        },
+        {
+          "name": "Get charge",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge/:id", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns information for a single charge by id."
+          }
+        },
+        {
+          "name": "List charges",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charges?begin_date=2026-07-01&end_date=2026-07-12", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charges"], "query": [{ "key": "begin_date", "value": "2026-07-01" }, { "key": "end_date", "value": "2026-07-12" }] },
+            "description": "Returns issued charges filtered by charge_type and date range."
+          }
+        },
+        {
+          "name": "Change boleto due date",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"expire_at\": \"2026-08-15\"\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge/:id/billet", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge", ":id", "billet"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Alters the expiration date of a boleto charge."
+          }
+        },
+        {
+          "name": "Cancel charge",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge/:id/cancel", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge", ":id", "cancel"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Cancels an existing charge."
+          }
+        },
+        {
+          "name": "Settle charge (baixa manual)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/charge/:id/settle", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "charge", ":id", "settle"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Marks a charge as paid (baixa manual)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Carnê",
+      "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{cobrancasToken}}", "type": "string" } ] },
+      "item": [
+        {
+          "name": "Create carnê",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"items\": [ { \"name\": \"Parcela\", \"value\": 5000, \"amount\": 1 } ],\n  \"customer\": { \"name\": \"Fulano de Tal\", \"cpf\": \"12345678909\" },\n  \"repeats\": 12,\n  \"expire_at\": \"2026-08-01\"\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/carnet", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "carnet"] },
+            "description": "Creates a carnê - a batch of installment charges (parcelas)."
+          }
+        },
+        {
+          "name": "Get carnê",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/carnet/:id", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "carnet", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns information for an existing carnê by id."
+          }
+        },
+        {
+          "name": "Change parcel due date",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"expire_at\": \"2026-09-01\"\n}" },
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/carnet/:id/parcel/:parcel", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "carnet", ":id", "parcel", ":parcel"], "variable": [{ "key": "id", "value": "" }, { "key": "parcel", "value": "1" }] },
+            "description": "Alters the expiration date of a specific carnê parcel."
+          }
+        },
+        {
+          "name": "Cancel carnê",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/carnet/:id/cancel", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "carnet", ":id", "cancel"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Cancels an entire carnê."
+          }
+        },
+        {
+          "name": "Settle carnê (baixa manual)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": { "raw": "{{cobrancasBaseUrl}}/v1/carnet/:id/settle", "host": ["{{cobrancasBaseUrl}}"], "path": ["v1", "carnet", ":id", "settle"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Marks an entire carnê as paid (baixa manual)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Open Finance",
+      "auth": { "type": "bearer", "bearer": [ { "key": "token", "value": "{{openFinanceToken}}", "type": "string" } ] },
+      "item": [
+        {
+          "name": "List participants [modeled - representative path]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{openFinanceBaseUrl}}/v1/open-finance/participants", "host": ["{{openFinanceBaseUrl}}"], "path": ["v1", "open-finance", "participants"] },
+            "description": "Lists Open Finance participants (banks/fintechs). Representative path from documented scope gn.opb.participants.read."
+          }
+        },
+        {
+          "name": "Initiate Pix via Open Finance [modeled - representative path]",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"payer\": { \"participant\": \"participant-id\" },\n  \"pix\": { \"valor\": \"100.00\", \"chave\": \"chave-destino\" }\n}" },
+            "url": { "raw": "{{openFinanceBaseUrl}}/v1/open-finance/payments/pix", "host": ["{{openFinanceBaseUrl}}"], "path": ["v1", "open-finance", "payments", "pix"] },
+            "description": "Initiates a Pix payment via Open Finance. Representative path from documented scope gn.opb.payment.pix.send."
+          }
+        }
+      ]
+    }
+  ]
+}

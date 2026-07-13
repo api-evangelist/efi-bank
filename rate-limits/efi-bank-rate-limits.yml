@@ -1,0 +1,68 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Efí
+providerId: efi-bank
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Payments
+- Pix
+- Boleto
+- Brazil
+- Rate Limiting
+- Quotas
+description: >-
+  Efí does not publish fixed numeric per-endpoint rate limits in its public
+  developer documentation. The Pix API operates under the Brazilian Central
+  Bank (BACEN) Pix arrangement, whose DICT and Pix operational limits are set by
+  BACEN and inherited by all participating PSPs rather than defined by Efí. OAuth2
+  access tokens are short-lived (Pix ~3600s / Cobranças ~600s), so clients must
+  cache and refresh tokens rather than authorizing per request. Practical
+  throughput is governed by the mandatory mTLS handshake (Pix / Open Finance),
+  token lifetime, and BACEN-level Pix limits.
+notes: >-
+  No numeric per-minute request cap is documented for the Pix, Cobranças, or Open
+  Finance APIs as of the review date. Values here describe token lifetimes and
+  documented behavior, not confirmed hard limits. Verify current limits with Efí
+  support and BACEN Pix regulation during reconciliation.
+sources:
+- https://dev.efipay.com.br/docs/api-pix/credenciais
+- https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+- https://dev.efipay.com.br/docs/api-open-finance/credenciais
+responseCodes:
+  throttled: 429
+limits:
+- name: Pix API Requests
+  scope: application
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented; subject to BACEN Pix operational limits.
+- name: Cobranças API Requests
+  scope: application
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for the Charges API.
+- name: Pix Access Token Lifetime
+  scope: application
+  metric: seconds
+  limit: '3600'
+  notes: Pix OAuth2 access token typically expires in 3600s; cache and reuse until expiry.
+- name: Cobranças Access Token Lifetime
+  scope: application
+  metric: seconds
+  limit: '600'
+  notes: Cobranças OAuth2 access token typically expires in 600s; refresh via refresh_token.
+policies:
+- name: Token Caching
+  description: Reuse the OAuth2 bearer token until expires_in elapses instead of requesting a new token per call; the token endpoints themselves are the most likely to be throttled if abused.
+- name: mTLS Handshake
+  description: Every Pix and Open Finance request must complete a mutual TLS handshake with the client certificate, adding per-connection overhead; reuse keep-alive connections to reduce it.
+- name: BACEN Pix Limits
+  description: Pix transaction values, schedules, and DICT key-lookup rates are governed by Brazilian Central Bank rules inherited by all PSPs, not by Efí-specific numeric API quotas.
+- name: Backoff Strategy
+  description: Implement exponential backoff with jitter and honor Retry-After on HTTP 429 responses.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

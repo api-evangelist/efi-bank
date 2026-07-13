@@ -1,0 +1,140 @@
+aid: efi-bank
+name: Efí
+review:
+  question: Does Efí expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-12'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Efí's public API surface (Pix, Cobranças,
+    Carnê, and Pix via Open Finance) is request/response REST over HTTPS. Efí's
+    only asynchronous, server-initiated mechanism is HTTP webhooks - Efí POSTs
+    received-Pix and charge notifications to a caller-registered HTTPS callback
+    URL (PUT /v2/webhook/{chave} to register). That is server-to-endpoint HTTP,
+    not a bidirectional WebSocket (ws:// or wss://) transport, so there is no
+    server-push socket protocol on Efí's own API to model with AsyncAPI.
+findings:
+  summary: |
+    Efí (formerly Gerencianet) does not publish a documented public WebSocket
+    API. Efí is a Brazilian payment institution and digital bank. Its public
+    products are REST APIs over HTTPS across three hosts: the Pix API
+    (https://pix.api.efipay.com.br), the Cobranças / Charges API
+    (https://cobrancas.api.efipay.com.br), and the Pix via Open Finance API
+    (https://openfinance.api.efipay.com.br). Authentication is OAuth2
+    client-credentials on every host; the Pix and Open Finance hosts additionally
+    REQUIRE a mutual TLS (mTLS) client certificate on every request per Brazilian
+    Central Bank rules, while the Cobranças host uses OAuth2 alone. Asynchronous
+    delivery is via HTTP webhooks (received-Pix and charge notifications POSTed to
+    a registered HTTPS callback), not via WebSocket. No ws:// or wss:// endpoint
+    is documented anywhere in Efí's developer documentation as of the review date.
+  rebrandNote: |
+    Efí was formerly named Gerencianet and rebranded to Efí (Efí Bank). The
+    company, CNPJ (09.089.356/0001-18), and products are continuous across the
+    rename. Legacy artifacts still carry the old identity: older host names,
+    SDK package names, and OAuth scope prefixes such as `gn.opb.*` in the Open
+    Finance API reflect the Gerencianet lineage. This entry uses the current
+    efipay.com.br / sejaefi.com.br hosts.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://pix.api.efipay.com.br
+      documented: true
+      note: Pix API. OAuth2 client-credentials PLUS mandatory mTLS client certificate. Sandbox https://pix-h.api.efipay.com.br.
+    - protocol: REST
+      scheme: https
+      baseURL: https://cobrancas.api.efipay.com.br
+      documented: true
+      note: Cobranças (Charges / Carnê) API. OAuth2 client-credentials, no mTLS. Sandbox https://cobrancas-h.api.efipay.com.br.
+    - protocol: REST
+      scheme: https
+      baseURL: https://openfinance.api.efipay.com.br
+      documented: true
+      note: Pix via Open Finance API. OAuth2 client-credentials PLUS mandatory mTLS. Sandbox https://openfinance-h.api.efipay.com.br.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Efí POSTs received-Pix and charge notifications to a caller-registered HTTPS callback URL. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Efí's Pix, Cobranças, or Open Finance API reference as of the review date.
+  endpointsConfirmedRest:
+    - POST   https://pix.api.efipay.com.br/oauth/token
+    - POST   https://pix.api.efipay.com.br/v2/cob
+    - PUT    https://pix.api.efipay.com.br/v2/cob/{txid}
+    - PATCH  https://pix.api.efipay.com.br/v2/cob/{txid}
+    - GET    https://pix.api.efipay.com.br/v2/cob/{txid}
+    - GET    https://pix.api.efipay.com.br/v2/cob
+    - PUT    https://pix.api.efipay.com.br/v2/webhook/{chave}
+    - GET    https://pix.api.efipay.com.br/v2/webhook/{chave}
+    - DELETE https://pix.api.efipay.com.br/v2/webhook/{chave}
+    - GET    https://pix.api.efipay.com.br/v2/webhook
+    - POST   https://cobrancas.api.efipay.com.br/v1/authorize
+    - POST   https://cobrancas.api.efipay.com.br/v1/charge
+    - POST   https://cobrancas.api.efipay.com.br/v1/charge/one-step
+    - POST   https://cobrancas.api.efipay.com.br/v1/charge/{id}/pay
+    - GET    https://cobrancas.api.efipay.com.br/v1/charge/{id}
+    - GET    https://cobrancas.api.efipay.com.br/v1/charges
+    - PUT    https://cobrancas.api.efipay.com.br/v1/charge/{id}/billet
+    - PUT    https://cobrancas.api.efipay.com.br/v1/charge/{id}/cancel
+    - PUT    https://cobrancas.api.efipay.com.br/v1/charge/{id}/settle
+    - POST   https://cobrancas.api.efipay.com.br/v1/carnet
+    - GET    https://cobrancas.api.efipay.com.br/v1/carnet/{id}
+    - PUT    https://cobrancas.api.efipay.com.br/v1/carnet/{id}/parcel/{parcel}
+    - PUT    https://cobrancas.api.efipay.com.br/v1/carnet/{id}/cancel
+    - PUT    https://cobrancas.api.efipay.com.br/v1/carnet/{id}/settle
+    - POST   https://openfinance.api.efipay.com.br/v1/oauth/token
+  endpointsModeled:
+    - PUT    https://pix.api.efipay.com.br/v2/cobv/{txid}   # dated charge - BACEN Pix v2 standard Efí implements
+    - GET    https://pix.api.efipay.com.br/v2/cobv/{txid}
+    - POST   https://pix.api.efipay.com.br/v2/loc           # payload location - BACEN Pix v2 standard
+    - GET    https://pix.api.efipay.com.br/v2/pix           # received Pix - BACEN Pix v2 standard
+    - GET    https://pix.api.efipay.com.br/v2/pix/{e2eid}
+    - PUT    https://pix.api.efipay.com.br/v2/pix/{e2eid}/devolucao/{id}  # refund - BACEN Pix v2 standard
+    - GET    https://pix.api.efipay.com.br/v2/pix/{e2eid}/devolucao/{id}
+    - GET    https://openfinance.api.efipay.com.br/v1/open-finance/participants   # representative path from documented scope gn.opb.participants.read
+    - POST   https://openfinance.api.efipay.com.br/v1/open-finance/payments/pix   # representative path from documented scope gn.opb.payment.pix.send
+  modeledNote: |
+    Endpoints under endpointsModeled follow the Brazilian Central Bank Pix API v2
+    standard that Efí implements (Efí advertises "nota máxima" / maximum rating
+    from Banco Central for its full Pix API, including CobV, Cash-In, Cash-Out,
+    Split, and reconciliation), and the Open Finance paths are representative
+    reconstructions from Efí's documented OAuth scopes. Their existence is
+    well-grounded; the exact path strings should be verified against the live
+    reference before production use.
+sources:
+  - url: https://dev.efipay.com.br/docs/api-pix/credenciais
+    type: Documentation
+    note: Pix API base URLs, OAuth2 client-credentials at POST /oauth/token, and mandatory P12/PEM mTLS certificate.
+  - url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+    type: APIReference
+    note: Immediate charge (cob) CRUD - POST/PUT/PATCH/GET /v2/cob(/{txid}) confirmed.
+  - url: https://dev.efipay.com.br/docs/api-pix/webhooks
+    type: APIReference
+    note: Pix webhook registration - PUT/GET/DELETE /v2/webhook/{chave}, GET /v2/webhook confirmed.
+  - url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+    type: Documentation
+    note: Cobranças base URLs, OAuth2 at POST /v1/authorize, no mTLS required.
+  - url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+    type: APIReference
+    note: Charge CRUD under /v1/charge, /v1/charges confirmed.
+  - url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+    type: APIReference
+    note: Carnê CRUD under /v1/carnet confirmed.
+  - url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+    type: Documentation
+    note: Open Finance base URLs, OAuth2 at POST /v1/oauth/token, mandatory mTLS, gn.opb.* scopes.
+  - url: https://sejaefi.com.br/tarifas
+    type: Pricing
+    note: Per-transaction pricing (Pix 1.19%, boleto/carnê confirmation fee, Pix Automático R$3.50).
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists on Efí's own API. Efí's public API is
+    request/response REST (Pix, Cobranças, Carnê, Open Finance) plus HTTP webhook
+    callbacks for received-Pix and charge notifications. No AsyncAPI document was
+    created because there is no server-push socket transport (ws:// or wss://) to
+    model; webhooks are server-to-endpoint HTTP and are represented as REST
+    registration operations.

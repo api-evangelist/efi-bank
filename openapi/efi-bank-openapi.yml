@@ -1,0 +1,1252 @@
+openapi: 3.0.3
+info:
+  title: Efí (formerly Gerencianet) Payments API
+  description: >-
+    Representative subset of Efí's public REST APIs for the Brazilian financial
+    system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital
+    bank. This document groups operations across several distinct API hosts, each
+    with its own base URL and authentication requirements:
+
+
+    - Pix API - base https://pix.api.efipay.com.br (sandbox
+      https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at
+      POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate
+      (.p12/.pem) on every request, as required by the Brazilian Central Bank.
+      Paths under /v2/*.
+
+
+    - Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox
+      https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP
+      Basic (token at POST /v1/authorize). No mTLS certificate required. Paths
+      under /v1/charge, /v1/charges, /v1/carnet.
+
+
+    - Pix via Open Finance API - base https://openfinance.api.efipay.com.br
+      (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials
+      (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.
+
+
+    Because OpenAPI 3.0 has a single security-scheme model, the mTLS requirement
+    for the Pix and Open Finance hosts is described here in prose and cannot be
+    fully expressed as a securityScheme; treat the mTLS client certificate as
+    mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints
+    marked "modeled" in the repository review follow the Brazilian Central Bank
+    Pix API v2 standard that Efí implements; the create/query charge, webhook,
+    charge, and carnê operations were confirmed directly against Efí's public
+    documentation.
+  version: '1.0'
+  contact:
+    name: Efí Developers
+    url: https://dev.efipay.com.br
+servers:
+  - url: https://pix.api.efipay.com.br
+    description: Pix API - production (mTLS certificate required)
+  - url: https://pix-h.api.efipay.com.br
+    description: Pix API - sandbox / homologação (mTLS certificate required)
+  - url: https://cobrancas.api.efipay.com.br
+    description: Cobranças (Charges) API - production
+  - url: https://openfinance.api.efipay.com.br
+    description: Pix via Open Finance API - production (mTLS certificate required)
+security:
+  - oAuth2ClientCredentials: []
+tags:
+  - name: Authorization
+    description: OAuth2 client-credentials token endpoints (per host).
+  - name: Pix Charges
+    description: Immediate (cob) and dated (cobv) Pix charges and payload locations. Host pix.api.efipay.com.br, mTLS required.
+  - name: Pix Payments
+    description: Received Pix, sent Pix, and refunds. Host pix.api.efipay.com.br, mTLS required.
+  - name: Pix Webhooks
+    description: Webhook registration for received-Pix notifications. Host pix.api.efipay.com.br, mTLS required.
+  - name: Cobranças
+    description: Boleto / card / Pix charges. Host cobrancas.api.efipay.com.br, no mTLS.
+  - name: Carnê
+    description: Installment booklets. Host cobrancas.api.efipay.com.br, no mTLS.
+  - name: Open Finance
+    description: Pix payment initiation via Open Finance. Host openfinance.api.efipay.com.br, mTLS required.
+paths:
+  /oauth/token:
+    post:
+      operationId: pixAuthorize
+      tags:
+        - Authorization
+      summary: Obtain a Pix API access token
+      description: >-
+        OAuth2 client-credentials token endpoint for the Pix API host. Send HTTP
+        Basic auth with Client_Id and Client_Secret. This request also requires
+        the mTLS client certificate.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Access token issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/cob:
+    post:
+      operationId: createImmediateCharge
+      tags:
+        - Pix Charges
+      summary: Create an immediate Pix charge (server-generated txid)
+      description: Creates an immediate Pix charge (cob) without providing a txid; Efí generates it. Scope cob.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CobRequest'
+      responses:
+        '201':
+          description: The created immediate charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cob'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: listImmediateCharges
+      tags:
+        - Pix Charges
+      summary: List immediate Pix charges
+      description: Lists immediate charges over a date range. Query parameters inicio and fim are mandatory. Scope cob.read.
+      parameters:
+        - name: inicio
+          in: query
+          required: true
+          description: Start of the filter interval (RFC 3339 timestamp).
+          schema:
+            type: string
+            format: date-time
+        - name: fim
+          in: query
+          required: true
+          description: End of the filter interval (RFC 3339 timestamp).
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: A paginated list of immediate charges.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CobList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/cob/{txid}:
+    parameters:
+      - $ref: '#/components/parameters/Txid'
+    put:
+      operationId: createImmediateChargeWithTxid
+      tags:
+        - Pix Charges
+      summary: Create an immediate Pix charge with a given txid
+      description: Creates an immediate Pix charge (cob) using a caller-supplied txid. Scope cob.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CobRequest'
+      responses:
+        '201':
+          description: The created immediate charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cob'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      operationId: reviseImmediateCharge
+      tags:
+        - Pix Charges
+      summary: Revise an immediate Pix charge
+      description: Revises fields of an existing immediate charge, creating a new revision. Scope cob.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CobRequest'
+      responses:
+        '200':
+          description: The revised immediate charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cob'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: getImmediateCharge
+      tags:
+        - Pix Charges
+      summary: Retrieve an immediate Pix charge
+      description: Retrieves an immediate charge by txid; supports the optional revisao query parameter. Scope cob.read.
+      responses:
+        '200':
+          description: The requested immediate charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cob'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/cobv/{txid}:
+    parameters:
+      - $ref: '#/components/parameters/Txid'
+    put:
+      operationId: createDatedCharge
+      tags:
+        - Pix Charges
+      summary: Create a dated Pix charge (cobv)
+      description: >-
+        Creates a Pix charge with a due date (cobv). Modeled on the Brazilian
+        Central Bank Pix API v2 standard that Efí implements. Scope cobv.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CobvRequest'
+      responses:
+        '201':
+          description: The created dated charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cobv'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: getDatedCharge
+      tags:
+        - Pix Charges
+      summary: Retrieve a dated Pix charge (cobv)
+      description: Retrieves a dated charge by txid. Modeled on the BACEN Pix API v2 standard. Scope cobv.read.
+      responses:
+        '200':
+          description: The requested dated charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cobv'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/loc:
+    post:
+      operationId: createLocation
+      tags:
+        - Pix Charges
+      summary: Create a payload location
+      description: >-
+        Creates a payload location (loc) used to generate the dynamic QR Code /
+        Pix Copia e Cola payload. Modeled on the BACEN Pix API v2 standard.
+        Scope loc.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationRequest'
+      responses:
+        '201':
+          description: The created payload location.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/pix:
+    get:
+      operationId: listReceivedPix
+      tags:
+        - Pix Payments
+      summary: List received Pix
+      description: >-
+        Lists received Pix over a date range (Cash-In). Query parameters inicio
+        and fim are mandatory. Modeled on the BACEN Pix API v2 standard. Scope
+        pix.read.
+      parameters:
+        - name: inicio
+          in: query
+          required: true
+          description: Start of the filter interval (RFC 3339 timestamp).
+          schema:
+            type: string
+            format: date-time
+        - name: fim
+          in: query
+          required: true
+          description: End of the filter interval (RFC 3339 timestamp).
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: A paginated list of received Pix.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PixList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/pix/{e2eid}:
+    parameters:
+      - name: e2eid
+        in: path
+        required: true
+        description: The end-to-end identifier of the Pix transaction.
+        schema:
+          type: string
+    get:
+      operationId: getReceivedPix
+      tags:
+        - Pix Payments
+      summary: Retrieve a received Pix
+      description: Retrieves a single received Pix by its end-to-end id. Modeled on the BACEN Pix API v2 standard. Scope pix.read.
+      responses:
+        '200':
+          description: The requested received Pix.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pix'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/pix/{e2eid}/devolucao/{id}:
+    parameters:
+      - name: e2eid
+        in: path
+        required: true
+        description: The end-to-end identifier of the Pix transaction.
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: Client-defined refund identifier.
+        schema:
+          type: string
+    put:
+      operationId: requestRefund
+      tags:
+        - Pix Payments
+      summary: Request a Pix refund (devolução)
+      description: >-
+        Requests a refund (devolução) for a received Pix, identified by the
+        end-to-end id and a client refund id. Modeled on the BACEN Pix API v2
+        standard. Scope pix.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+      responses:
+        '201':
+          description: The created refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: getRefund
+      tags:
+        - Pix Payments
+      summary: Retrieve a Pix refund
+      description: Retrieves a refund by end-to-end id and refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.read.
+      responses:
+        '200':
+          description: The requested refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/webhook/{chave}:
+    parameters:
+      - name: chave
+        in: path
+        required: true
+        description: The Pix key (chave) the webhook is associated with.
+        schema:
+          type: string
+    put:
+      operationId: configureWebhook
+      tags:
+        - Pix Webhooks
+      summary: Configure a Pix webhook
+      description: Registers the callback URL that Efí will POST received-Pix notifications to for a given Pix key. Scope webhook.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+      responses:
+        '200':
+          description: Webhook configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: getWebhook
+      tags:
+        - Pix Webhooks
+      summary: Retrieve a Pix webhook
+      description: Retrieves the webhook configured for a given Pix key. Scope webhook.read.
+      responses:
+        '200':
+          description: The configured webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteWebhook
+      tags:
+        - Pix Webhooks
+      summary: Cancel a Pix webhook
+      description: Cancels the webhook associated with a given Pix key. Scope webhook.write.
+      responses:
+        '204':
+          description: Webhook cancelled.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/webhook:
+    get:
+      operationId: listWebhooks
+      tags:
+        - Pix Webhooks
+      summary: List Pix webhooks
+      description: Lists webhooks associated with Pix keys, filtered by parameters. Scope webhook.read.
+      responses:
+        '200':
+          description: A list of webhooks.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/authorize:
+    post:
+      operationId: cobrancasAuthorize
+      tags:
+        - Authorization
+      summary: Obtain a Cobranças API access token
+      description: >-
+        OAuth2 client-credentials token endpoint for the Cobranças host. Send
+        HTTP Basic auth with Client_Id and Client_Secret. No mTLS certificate is
+        required for this host.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Access token issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge:
+    post:
+      operationId: createCharge
+      tags:
+        - Cobranças
+      summary: Create a charge (two-step)
+      description: Creates a charge (transação) describing the item(s), value, and quantity, before associating a payment method.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeRequest'
+      responses:
+        '200':
+          description: The created charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/one-step:
+    post:
+      operationId: createChargeOneStep
+      tags:
+        - Cobranças
+      summary: Create a charge (one-step)
+      description: Creates a charge and associates the payment method (boleto, card, or Pix) in a single request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeOneStepRequest'
+      responses:
+        '200':
+          description: The created charge with payment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charges:
+    get:
+      operationId: listCharges
+      tags:
+        - Cobranças
+      summary: List charges
+      description: Returns issued charges, filterable by charge_type and date range (begin_date, end_date).
+      parameters:
+        - name: charge_type
+          in: query
+          required: false
+          description: Filter by charge type (for example billet or carnet).
+          schema:
+            type: string
+        - name: begin_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: A list of charges.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    get:
+      operationId: getCharge
+      tags:
+        - Cobranças
+      summary: Retrieve a charge
+      description: Returns information for a single charge (transação) by id.
+      responses:
+        '200':
+          description: The requested charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/charge/{id}/pay:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    post:
+      operationId: payCharge
+      tags:
+        - Cobranças
+      summary: Associate a payment method to a charge
+      description: Associates a charge with the desired payment method (boleto bancário, credit card, or Pix).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayChargeRequest'
+      responses:
+        '200':
+          description: The charge with payment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}/billet:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    put:
+      operationId: updateChargeBilletDueDate
+      tags:
+        - Cobranças
+      summary: Change a charge's boleto due date
+      description: Alters the expiration (vencimento) date of a boleto charge.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expire_at:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: The updated charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}/cancel:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    put:
+      operationId: cancelCharge
+      tags:
+        - Cobranças
+      summary: Cancel a charge
+      description: Cancels an existing charge.
+      responses:
+        '200':
+          description: The cancelled charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}/settle:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    put:
+      operationId: settleCharge
+      tags:
+        - Cobranças
+      summary: Manually settle a charge
+      description: Marks a charge as paid (baixa manual).
+      responses:
+        '200':
+          description: The settled charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet:
+    post:
+      operationId: createCarnet
+      tags:
+        - Carnê
+      summary: Create a carnê
+      description: Creates a carnê - a set of installment charges (parcelas) generated in a batch.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarnetRequest'
+      responses:
+        '200':
+          description: The created carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet/{id}:
+    parameters:
+      - $ref: '#/components/parameters/CarnetId'
+    get:
+      operationId: getCarnet
+      tags:
+        - Carnê
+      summary: Retrieve a carnê
+      description: Returns information for an existing carnê by id.
+      responses:
+        '200':
+          description: The requested carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/carnet/{id}/parcel/{parcel}:
+    parameters:
+      - $ref: '#/components/parameters/CarnetId'
+      - name: parcel
+        in: path
+        required: true
+        description: The installment (parcela) number.
+        schema:
+          type: integer
+    put:
+      operationId: updateCarnetParcelDueDate
+      tags:
+        - Carnê
+      summary: Change a parcel's due date
+      description: Alters the expiration date of a specific carnê parcel.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expire_at:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: The updated carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet/{id}/cancel:
+    parameters:
+      - $ref: '#/components/parameters/CarnetId'
+    put:
+      operationId: cancelCarnet
+      tags:
+        - Carnê
+      summary: Cancel a carnê
+      description: Cancels an entire carnê and all of its open parcels.
+      responses:
+        '200':
+          description: The cancelled carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet/{id}/settle:
+    parameters:
+      - $ref: '#/components/parameters/CarnetId'
+    put:
+      operationId: settleCarnet
+      tags:
+        - Carnê
+      summary: Manually settle a carnê
+      description: Marks an entire carnê as paid (baixa manual).
+      responses:
+        '200':
+          description: The settled carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/oauth/token:
+    post:
+      operationId: openFinanceAuthorize
+      tags:
+        - Authorization
+      summary: Obtain an Open Finance API access token
+      description: >-
+        OAuth2 client-credentials token endpoint for the Open Finance host. Send
+        HTTP Basic auth with Client_Id and Client_Secret. This request also
+        requires the mTLS client certificate.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Access token issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/open-finance/participants:
+    get:
+      operationId: listOpenFinanceParticipants
+      tags:
+        - Open Finance
+      summary: List Open Finance participants
+      description: >-
+        Lists the banks and fintechs available as payment sources in Brazil's
+        Open Finance ecosystem. Modeled from Efí's documented Open Finance
+        scopes (gn.opb.participants.read); path shown is representative.
+        Scope gn.opb.participants.read.
+      responses:
+        '200':
+          description: A list of participants.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  participants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Participant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/open-finance/payments/pix:
+    post:
+      operationId: initiateOpenFinancePix
+      tags:
+        - Open Finance
+      summary: Initiate a Pix payment via Open Finance
+      description: >-
+        Initiates a Pix payment as a payment initiator across an Open Finance
+        participant. Modeled from Efí's documented scope
+        gn.opb.payment.pix.send; path shown is representative.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenFinancePixRequest'
+      responses:
+        '201':
+          description: The initiated payment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenFinancePixPayment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: >-
+        OAuth2 client-credentials. Obtain a bearer token from the host's token
+        endpoint using HTTP Basic auth (Client_Id / Client_Secret), then send it
+        as Authorization: Bearer. On the Pix and Open Finance hosts a mutual TLS
+        (mTLS) client certificate (.p12/.pem) is additionally mandatory on every
+        request, including the token request, per Brazilian Central Bank rules.
+      flows:
+        clientCredentials:
+          tokenUrl: https://pix.api.efipay.com.br/oauth/token
+          scopes:
+            cob.write: Create and revise immediate Pix charges.
+            cob.read: Read immediate Pix charges.
+            cobv.write: Create and revise dated Pix charges.
+            cobv.read: Read dated Pix charges.
+            pix.write: Request Pix refunds.
+            pix.read: Read received Pix and refunds.
+            pix.send: Send Pix (Cash-Out).
+            loc.write: Create payload locations.
+            webhook.write: Configure and delete webhooks.
+            webhook.read: Read webhooks.
+            gn.opb.participants.read: Read Open Finance participants.
+            gn.opb.payment.pix.send: Initiate Pix via Open Finance.
+            gn.opb.payment.pix.read: Read Open Finance payments.
+  parameters:
+    Txid:
+      name: txid
+      in: path
+      required: true
+      description: Transaction identifier (26-35 alphanumeric characters).
+      schema:
+        type: string
+    ChargeId:
+      name: id
+      in: path
+      required: true
+      description: The charge (transação) identifier.
+      schema:
+        type: integer
+    CarnetId:
+      name: id
+      in: path
+      required: true
+      description: The carnê identifier.
+      schema:
+        type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+    TokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          default: client_credentials
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+        scope:
+          type: string
+    Devedor:
+      type: object
+      properties:
+        cpf:
+          type: string
+        cnpj:
+          type: string
+        nome:
+          type: string
+    Valor:
+      type: object
+      properties:
+        original:
+          type: string
+          example: '123.45'
+    CobRequest:
+      type: object
+      properties:
+        calendario:
+          type: object
+          properties:
+            expiracao:
+              type: integer
+              example: 3600
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+          description: Pix key (chave) that receives the payment.
+        solicitacaoPagador:
+          type: string
+    Cob:
+      allOf:
+        - $ref: '#/components/schemas/CobRequest'
+        - type: object
+          properties:
+            txid:
+              type: string
+            revisao:
+              type: integer
+            status:
+              type: string
+              enum:
+                - ATIVA
+                - CONCLUIDA
+                - REMOVIDA_PELO_USUARIO_RECEBEDOR
+                - REMOVIDA_PELO_PSP
+            location:
+              type: string
+            pixCopiaECola:
+              type: string
+    CobList:
+      type: object
+      properties:
+        parametros:
+          type: object
+          additionalProperties: true
+        cobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cob'
+    CobvRequest:
+      type: object
+      properties:
+        calendario:
+          type: object
+          properties:
+            dataDeVencimento:
+              type: string
+              format: date
+            validadeAposVencimento:
+              type: integer
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+    Cobv:
+      allOf:
+        - $ref: '#/components/schemas/CobvRequest'
+        - type: object
+          properties:
+            txid:
+              type: string
+            status:
+              type: string
+            location:
+              type: string
+            pixCopiaECola:
+              type: string
+    LocationRequest:
+      type: object
+      properties:
+        tipoCob:
+          type: string
+          enum:
+            - cob
+            - cobv
+    Location:
+      allOf:
+        - $ref: '#/components/schemas/LocationRequest'
+        - type: object
+          properties:
+            id:
+              type: integer
+            location:
+              type: string
+            criacao:
+              type: string
+              format: date-time
+    Pix:
+      type: object
+      properties:
+        endToEndId:
+          type: string
+        txid:
+          type: string
+        valor:
+          type: string
+        horario:
+          type: string
+          format: date-time
+        pagador:
+          type: object
+          additionalProperties: true
+    PixList:
+      type: object
+      properties:
+        pix:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pix'
+    RefundRequest:
+      type: object
+      properties:
+        valor:
+          type: string
+          example: '12.34'
+    Refund:
+      allOf:
+        - $ref: '#/components/schemas/RefundRequest'
+        - type: object
+          properties:
+            id:
+              type: string
+            rtrId:
+              type: string
+            status:
+              type: string
+              enum:
+                - EM_PROCESSAMENTO
+                - DEVOLVIDO
+                - NAO_REALIZADO
+    WebhookRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type: string
+          format: uri
+    Webhook:
+      allOf:
+        - $ref: '#/components/schemas/WebhookRequest'
+        - type: object
+          properties:
+            chave:
+              type: string
+            criacao:
+              type: string
+              format: date-time
+    ChargeItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
+          description: Unit value in cents (centavos).
+        amount:
+          type: integer
+    ChargeRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+    ChargeOneStepRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        payment:
+          type: object
+          description: Payment method - banking_billet, credit_card, or pix.
+          additionalProperties: true
+    Charge:
+      type: object
+      properties:
+        charge_id:
+          type: integer
+        status:
+          type: string
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        payment:
+          type: object
+          additionalProperties: true
+    ChargeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    PayChargeRequest:
+      type: object
+      properties:
+        payment:
+          type: object
+          additionalProperties: true
+    CarnetParcel:
+      type: object
+      properties:
+        parcel:
+          type: integer
+        expire_at:
+          type: string
+          format: date
+        status:
+          type: string
+    CarnetRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        customer:
+          type: object
+          additionalProperties: true
+        repeats:
+          type: integer
+          description: Number of installments (parcelas).
+        expire_at:
+          type: string
+          format: date
+    Carnet:
+      type: object
+      properties:
+        carnet_id:
+          type: integer
+        status:
+          type: string
+        charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarnetParcel'
+    Participant:
+      type: object
+      properties:
+        identification:
+          type: string
+        name:
+          type: string
+    OpenFinancePixRequest:
+      type: object
+      properties:
+        payer:
+          type: object
+          properties:
+            participant:
+              type: string
+        pix:
+          type: object
+          additionalProperties: true
+    OpenFinancePixPayment:
+      allOf:
+        - $ref: '#/components/schemas/OpenFinancePixRequest'
+        - type: object
+          properties:
+            identifierPayment:
+              type: string
+            status:
+              type: string

@@ -1,0 +1,103 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Efí
+providerId: efi-bank
+created: '2026-07-12'
+modified: '2026-07-12'
+reconciled: false
+tags:
+- Payments
+- Pix
+- Boleto
+- Brazil
+- Financial Infrastructure
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Efí (formerly Gerencianet) spend. Unlike a SaaS API where you
+  pay per API call or per seat, Efí is a payment institution: its APIs are free to
+  call, and cost is incurred PER SETTLED TRANSACTION. The dominant cost drivers
+  are (1) Pix received via API, billed as a percentage of the transaction (~1.19%
+  advertised standard), (2) boletos and carnê parcels, billed a fixed confirmation
+  fee only when paid (~R$3.45 advertised), and (3) Pix Automático settlements
+  (~R$3.50 advertised). Generating charges, opening the account, and holding
+  credentials cost nothing. All amounts are in BRL and are unreconciled - these
+  are per-transaction payment tariffs, not cloud/API metering, and they vary by
+  negotiated volume.
+notes: >-
+  Per-unit rates here are advertised standard tariffs and are NOT reconciled;
+  verify on https://sejaefi.com.br/tarifas. Because billing is per financial
+  transaction, cost scales with settled payment volume and mix (Pix % vs. fixed
+  boleto fee), so the FinOps focus is transaction-mix optimization rather than
+  request-rate optimization.
+sources:
+- https://sejaefi.com.br/tarifas
+- https://sejaefi.com.br/central-de-ajuda/tarifas-e-prazos
+- https://dev.efipay.com.br
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Efí
+serviceCategory: Financial Services and Payments
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Per Transaction
+  billingCurrency: BRL
+  chargeCategories:
+  - Usage
+  - Purchase
+focusColumns:
+  ServiceName: Efí Payments APIs
+  ServiceCategory: Financial Services and Payments
+  ProviderName: Efí
+  PublisherName: Efí
+  InvoiceIssuerName: Efí (Instituição de Pagamento)
+  BillingCurrency: BRL
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: pix_received
+  description: Pix received via API (Cob / CobV), billed as a percentage of the transaction value (~1.19% advertised; unreconciled).
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - pix_key
+- name: boleto_settled
+  description: Boletos and carnê parcels actually paid, each billed a fixed confirmation fee (~R$3.45 advertised; unreconciled). Generation is free.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - charge_type
+- name: pix_automatico_settled
+  description: Automatic Pix settlements, billed a fixed fee per liquidated Pix (~R$3.50 advertised; unreconciled).
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+- name: open_finance_initiation
+  description: Pix payments initiated via Open Finance as a payment initiator; pricing negotiated per partner.
+  unit: transactions
+  aggregation: sum
+  dimensions:
+  - account
+  - participant
+principles:
+- name: Visibility
+  description: Track settled-transaction counts and value per Pix key and charge type; reconcile the percentage Pix fee and fixed boleto fee against the tarifas page monthly.
+- name: Allocation
+  description: Use per-charge custom_id / notification metadata and distinct Pix keys to map transaction fees to products, teams, or marketplace sellers (payment split).
+- name: Optimization
+  description: Steer customers toward the lowest-fee settled instrument for each amount - a percentage Pix fee is cheaper on small tickets while a fixed boleto fee is cheaper on large tickets; use the 30 free monthly Pix allowance; avoid generating charges that will not be paid since only settlements are billed.
+- name: Accountability
+  description: Assign an owner per Efí account / sub-merchant; review monthly settled volume and fee mix against negotiated-rate thresholds and renegotiate at higher volume.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
