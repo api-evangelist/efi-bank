@@ -140,6 +140,8 @@ apis:
     reverse initiated payments. Requires OAuth2 client-credentials and a mandatory
     mTLS certificate.
 common:
+- type: AgenticAccess
+  url: agentic-access/efi-bank-agentic-access.yml
 - type: DomainSecurity
   url: security/efi-bank-domain-security.yml
 - type: Authentication
