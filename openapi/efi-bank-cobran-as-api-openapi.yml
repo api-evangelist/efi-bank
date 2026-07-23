@@ -1,0 +1,322 @@
+openapi: 3.0.3
+info:
+  title: Efí (formerly Gerencianet) Payments Authorization Cobranças API
+  description: "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation."
+  version: '1.0'
+  contact:
+    name: Efí Developers
+    url: https://dev.efipay.com.br
+servers:
+- url: https://pix.api.efipay.com.br
+  description: Pix API - production (mTLS certificate required)
+- url: https://pix-h.api.efipay.com.br
+  description: Pix API - sandbox / homologação (mTLS certificate required)
+- url: https://cobrancas.api.efipay.com.br
+  description: Cobranças (Charges) API - production
+- url: https://openfinance.api.efipay.com.br
+  description: Pix via Open Finance API - production (mTLS certificate required)
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Cobranças
+  description: Boleto / card / Pix charges. Host cobrancas.api.efipay.com.br, no mTLS.
+paths:
+  /v1/charge:
+    post:
+      operationId: createCharge
+      tags:
+      - Cobranças
+      summary: Create a charge (two-step)
+      description: Creates a charge (transação) describing the item(s), value, and quantity, before associating a payment method.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeRequest'
+      responses:
+        '200':
+          description: The created charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/one-step:
+    post:
+      operationId: createChargeOneStep
+      tags:
+      - Cobranças
+      summary: Create a charge (one-step)
+      description: Creates a charge and associates the payment method (boleto, card, or Pix) in a single request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChargeOneStepRequest'
+      responses:
+        '200':
+          description: The created charge with payment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charges:
+    get:
+      operationId: listCharges
+      tags:
+      - Cobranças
+      summary: List charges
+      description: Returns issued charges, filterable by charge_type and date range (begin_date, end_date).
+      parameters:
+      - name: charge_type
+        in: query
+        required: false
+        description: Filter by charge type (for example billet or carnet).
+        schema:
+          type: string
+      - name: begin_date
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: A list of charges.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}:
+    parameters:
+    - $ref: '#/components/parameters/ChargeId'
+    get:
+      operationId: getCharge
+      tags:
+      - Cobranças
+      summary: Retrieve a charge
+      description: Returns information for a single charge (transação) by id.
+      responses:
+        '200':
+          description: The requested charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/charge/{id}/pay:
+    parameters:
+    - $ref: '#/components/parameters/ChargeId'
+    post:
+      operationId: payCharge
+      tags:
+      - Cobranças
+      summary: Associate a payment method to a charge
+      description: Associates a charge with the desired payment method (boleto bancário, credit card, or Pix).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayChargeRequest'
+      responses:
+        '200':
+          description: The charge with payment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}/billet:
+    parameters:
+    - $ref: '#/components/parameters/ChargeId'
+    put:
+      operationId: updateChargeBilletDueDate
+      tags:
+      - Cobranças
+      summary: Change a charge's boleto due date
+      description: Alters the expiration (vencimento) date of a boleto charge.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expire_at:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: The updated charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}/cancel:
+    parameters:
+    - $ref: '#/components/parameters/ChargeId'
+    put:
+      operationId: cancelCharge
+      tags:
+      - Cobranças
+      summary: Cancel a charge
+      description: Cancels an existing charge.
+      responses:
+        '200':
+          description: The cancelled charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/charge/{id}/settle:
+    parameters:
+    - $ref: '#/components/parameters/ChargeId'
+    put:
+      operationId: settleCharge
+      tags:
+      - Cobranças
+      summary: Manually settle a charge
+      description: Marks a charge as paid (baixa manual).
+      responses:
+        '200':
+          description: The settled charge.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Charge'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    ChargeItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
+          description: Unit value in cents (centavos).
+        amount:
+          type: integer
+    Charge:
+      type: object
+      properties:
+        charge_id:
+          type: integer
+        status:
+          type: string
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        payment:
+          type: object
+          additionalProperties: true
+    PayChargeRequest:
+      type: object
+      properties:
+        payment:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+    ChargeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    ChargeRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+    ChargeOneStepRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        payment:
+          type: object
+          description: Payment method - banking_billet, credit_card, or pix.
+          additionalProperties: true
+  parameters:
+    ChargeId:
+      name: id
+      in: path
+      required: true
+      description: The charge (transação) identifier.
+      schema:
+        type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: 'OAuth2 client-credentials. Obtain a bearer token from the host''s token endpoint using HTTP Basic auth (Client_Id / Client_Secret), then send it as Authorization: Bearer. On the Pix and Open Finance hosts a mutual TLS (mTLS) client certificate (.p12/.pem) is additionally mandatory on every request, including the token request, per Brazilian Central Bank rules.'
+      flows:
+        clientCredentials:
+          tokenUrl: https://pix.api.efipay.com.br/oauth/token
+          scopes:
+            cob.write: Create and revise immediate Pix charges.
+            cob.read: Read immediate Pix charges.
+            cobv.write: Create and revise dated Pix charges.
+            cobv.read: Read dated Pix charges.
+            pix.write: Request Pix refunds.
+            pix.read: Read received Pix and refunds.
+            pix.send: Send Pix (Cash-Out).
+            loc.write: Create payload locations.
+            webhook.write: Configure and delete webhooks.
+            webhook.read: Read webhooks.
+            gn.opb.participants.read: Read Open Finance participants.
+            gn.opb.payment.pix.send: Initiate Pix via Open Finance.
+            gn.opb.payment.pix.read: Read Open Finance payments.

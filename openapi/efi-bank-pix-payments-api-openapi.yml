@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: Efí (formerly Gerencianet) Payments Authorization Pix Payments API
+  description: "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation."
+  version: '1.0'
+  contact:
+    name: Efí Developers
+    url: https://dev.efipay.com.br
+servers:
+- url: https://pix.api.efipay.com.br
+  description: Pix API - production (mTLS certificate required)
+- url: https://pix-h.api.efipay.com.br
+  description: Pix API - sandbox / homologação (mTLS certificate required)
+- url: https://cobrancas.api.efipay.com.br
+  description: Cobranças (Charges) API - production
+- url: https://openfinance.api.efipay.com.br
+  description: Pix via Open Finance API - production (mTLS certificate required)
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Pix Payments
+  description: Received Pix, sent Pix, and refunds. Host pix.api.efipay.com.br, mTLS required.
+paths:
+  /v2/pix:
+    get:
+      operationId: listReceivedPix
+      tags:
+      - Pix Payments
+      summary: List received Pix
+      description: Lists received Pix over a date range (Cash-In). Query parameters inicio and fim are mandatory. Modeled on the BACEN Pix API v2 standard. Scope pix.read.
+      parameters:
+      - name: inicio
+        in: query
+        required: true
+        description: Start of the filter interval (RFC 3339 timestamp).
+        schema:
+          type: string
+          format: date-time
+      - name: fim
+        in: query
+        required: true
+        description: End of the filter interval (RFC 3339 timestamp).
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: A paginated list of received Pix.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PixList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v2/pix/{e2eid}:
+    parameters:
+    - name: e2eid
+      in: path
+      required: true
+      description: The end-to-end identifier of the Pix transaction.
+      schema:
+        type: string
+    get:
+      operationId: getReceivedPix
+      tags:
+      - Pix Payments
+      summary: Retrieve a received Pix
+      description: Retrieves a single received Pix by its end-to-end id. Modeled on the BACEN Pix API v2 standard. Scope pix.read.
+      responses:
+        '200':
+          description: The requested received Pix.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pix'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/pix/{e2eid}/devolucao/{id}:
+    parameters:
+    - name: e2eid
+      in: path
+      required: true
+      description: The end-to-end identifier of the Pix transaction.
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      description: Client-defined refund identifier.
+      schema:
+        type: string
+    put:
+      operationId: requestRefund
+      tags:
+      - Pix Payments
+      summary: Request a Pix refund (devolução)
+      description: Requests a refund (devolução) for a received Pix, identified by the end-to-end id and a client refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+      responses:
+        '201':
+          description: The created refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: getRefund
+      tags:
+      - Pix Payments
+      summary: Retrieve a Pix refund
+      description: Retrieves a refund by end-to-end id and refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.read.
+      responses:
+        '200':
+          description: The requested refund.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    RefundRequest:
+      type: object
+      properties:
+        valor:
+          type: string
+          example: '12.34'
+    Refund:
+      allOf:
+      - $ref: '#/components/schemas/RefundRequest'
+      - type: object
+        properties:
+          id:
+            type: string
+          rtrId:
+            type: string
+          status:
+            type: string
+            enum:
+            - EM_PROCESSAMENTO
+            - DEVOLVIDO
+            - NAO_REALIZADO
+    Pix:
+      type: object
+      properties:
+        endToEndId:
+          type: string
+        txid:
+          type: string
+        valor:
+          type: string
+        horario:
+          type: string
+          format: date-time
+        pagador:
+          type: object
+          additionalProperties: true
+    PixList:
+      type: object
+      properties:
+        pix:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pix'
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: 'OAuth2 client-credentials. Obtain a bearer token from the host''s token endpoint using HTTP Basic auth (Client_Id / Client_Secret), then send it as Authorization: Bearer. On the Pix and Open Finance hosts a mutual TLS (mTLS) client certificate (.p12/.pem) is additionally mandatory on every request, including the token request, per Brazilian Central Bank rules.'
+      flows:
+        clientCredentials:
+          tokenUrl: https://pix.api.efipay.com.br/oauth/token
+          scopes:
+            cob.write: Create and revise immediate Pix charges.
+            cob.read: Read immediate Pix charges.
+            cobv.write: Create and revise dated Pix charges.
+            cobv.read: Read dated Pix charges.
+            pix.write: Request Pix refunds.
+            pix.read: Read received Pix and refunds.
+            pix.send: Send Pix (Cash-Out).
+            loc.write: Create payload locations.
+            webhook.write: Configure and delete webhooks.
+            webhook.read: Read webhooks.
+            gn.opb.participants.read: Read Open Finance participants.
+            gn.opb.payment.pix.send: Initiate Pix via Open Finance.
+            gn.opb.payment.pix.read: Read Open Finance payments.

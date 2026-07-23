@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Efí (formerly Gerencianet) Payments Authorization Carnê API
+  description: "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation."
+  version: '1.0'
+  contact:
+    name: Efí Developers
+    url: https://dev.efipay.com.br
+servers:
+- url: https://pix.api.efipay.com.br
+  description: Pix API - production (mTLS certificate required)
+- url: https://pix-h.api.efipay.com.br
+  description: Pix API - sandbox / homologação (mTLS certificate required)
+- url: https://cobrancas.api.efipay.com.br
+  description: Cobranças (Charges) API - production
+- url: https://openfinance.api.efipay.com.br
+  description: Pix via Open Finance API - production (mTLS certificate required)
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Carnê
+  description: Installment booklets. Host cobrancas.api.efipay.com.br, no mTLS.
+paths:
+  /v1/carnet:
+    post:
+      operationId: createCarnet
+      tags:
+      - Carnê
+      summary: Create a carnê
+      description: Creates a carnê - a set of installment charges (parcelas) generated in a batch.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarnetRequest'
+      responses:
+        '200':
+          description: The created carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet/{id}:
+    parameters:
+    - $ref: '#/components/parameters/CarnetId'
+    get:
+      operationId: getCarnet
+      tags:
+      - Carnê
+      summary: Retrieve a carnê
+      description: Returns information for an existing carnê by id.
+      responses:
+        '200':
+          description: The requested carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v1/carnet/{id}/parcel/{parcel}:
+    parameters:
+    - $ref: '#/components/parameters/CarnetId'
+    - name: parcel
+      in: path
+      required: true
+      description: The installment (parcela) number.
+      schema:
+        type: integer
+    put:
+      operationId: updateCarnetParcelDueDate
+      tags:
+      - Carnê
+      summary: Change a parcel's due date
+      description: Alters the expiration date of a specific carnê parcel.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expire_at:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: The updated carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet/{id}/cancel:
+    parameters:
+    - $ref: '#/components/parameters/CarnetId'
+    put:
+      operationId: cancelCarnet
+      tags:
+      - Carnê
+      summary: Cancel a carnê
+      description: Cancels an entire carnê and all of its open parcels.
+      responses:
+        '200':
+          description: The cancelled carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /v1/carnet/{id}/settle:
+    parameters:
+    - $ref: '#/components/parameters/CarnetId'
+    put:
+      operationId: settleCarnet
+      tags:
+      - Carnê
+      summary: Manually settle a carnê
+      description: Marks an entire carnê as paid (baixa manual).
+      responses:
+        '200':
+          description: The settled carnê.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Carnet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    ChargeItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
+          description: Unit value in cents (centavos).
+        amount:
+          type: integer
+    CarnetParcel:
+      type: object
+      properties:
+        parcel:
+          type: integer
+        expire_at:
+          type: string
+          format: date
+        status:
+          type: string
+    CarnetRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        customer:
+          type: object
+          additionalProperties: true
+        repeats:
+          type: integer
+          description: Number of installments (parcelas).
+        expire_at:
+          type: string
+          format: date
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+    Carnet:
+      type: object
+      properties:
+        carnet_id:
+          type: integer
+        status:
+          type: string
+        charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarnetParcel'
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    CarnetId:
+      name: id
+      in: path
+      required: true
+      description: The carnê identifier.
+      schema:
+        type: integer
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: 'OAuth2 client-credentials. Obtain a bearer token from the host''s token endpoint using HTTP Basic auth (Client_Id / Client_Secret), then send it as Authorization: Bearer. On the Pix and Open Finance hosts a mutual TLS (mTLS) client certificate (.p12/.pem) is additionally mandatory on every request, including the token request, per Brazilian Central Bank rules.'
+      flows:
+        clientCredentials:
+          tokenUrl: https://pix.api.efipay.com.br/oauth/token
+          scopes:
+            cob.write: Create and revise immediate Pix charges.
+            cob.read: Read immediate Pix charges.
+            cobv.write: Create and revise dated Pix charges.
+            cobv.read: Read dated Pix charges.
+            pix.write: Request Pix refunds.
+            pix.read: Read received Pix and refunds.
+            pix.send: Send Pix (Cash-Out).
+            loc.write: Create payload locations.
+            webhook.write: Configure and delete webhooks.
+            webhook.read: Read webhooks.
+            gn.opb.participants.read: Read Open Finance participants.
+            gn.opb.payment.pix.send: Initiate Pix via Open Finance.
+            gn.opb.payment.pix.read: Read Open Finance payments.

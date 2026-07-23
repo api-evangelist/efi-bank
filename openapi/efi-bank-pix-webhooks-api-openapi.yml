@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: Efí (formerly Gerencianet) Payments Authorization Pix Webhooks API
+  description: "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation."
+  version: '1.0'
+  contact:
+    name: Efí Developers
+    url: https://dev.efipay.com.br
+servers:
+- url: https://pix.api.efipay.com.br
+  description: Pix API - production (mTLS certificate required)
+- url: https://pix-h.api.efipay.com.br
+  description: Pix API - sandbox / homologação (mTLS certificate required)
+- url: https://cobrancas.api.efipay.com.br
+  description: Cobranças (Charges) API - production
+- url: https://openfinance.api.efipay.com.br
+  description: Pix via Open Finance API - production (mTLS certificate required)
+security:
+- oAuth2ClientCredentials: []
+tags:
+- name: Pix Webhooks
+  description: Webhook registration for received-Pix notifications. Host pix.api.efipay.com.br, mTLS required.
+paths:
+  /v2/webhook/{chave}:
+    parameters:
+    - name: chave
+      in: path
+      required: true
+      description: The Pix key (chave) the webhook is associated with.
+      schema:
+        type: string
+    put:
+      operationId: configureWebhook
+      tags:
+      - Pix Webhooks
+      summary: Configure a Pix webhook
+      description: Registers the callback URL that Efí will POST received-Pix notifications to for a given Pix key. Scope webhook.write.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+      responses:
+        '200':
+          description: Webhook configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    get:
+      operationId: getWebhook
+      tags:
+      - Pix Webhooks
+      summary: Retrieve a Pix webhook
+      description: Retrieves the webhook configured for a given Pix key. Scope webhook.read.
+      responses:
+        '200':
+          description: The configured webhook.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteWebhook
+      tags:
+      - Pix Webhooks
+      summary: Cancel a Pix webhook
+      description: Cancels the webhook associated with a given Pix key. Scope webhook.write.
+      responses:
+        '204':
+          description: Webhook cancelled.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /v2/webhook:
+    get:
+      operationId: listWebhooks
+      tags:
+      - Pix Webhooks
+      summary: List Pix webhooks
+      description: Lists webhooks associated with Pix keys, filtered by parameters. Scope webhook.read.
+      responses:
+        '200':
+          description: A list of webhooks.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Webhook'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    WebhookRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type: string
+          format: uri
+    Webhook:
+      allOf:
+      - $ref: '#/components/schemas/WebhookRequest'
+      - type: object
+        properties:
+          chave:
+            type: string
+          criacao:
+            type: string
+            format: date-time
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      description: 'OAuth2 client-credentials. Obtain a bearer token from the host''s token endpoint using HTTP Basic auth (Client_Id / Client_Secret), then send it as Authorization: Bearer. On the Pix and Open Finance hosts a mutual TLS (mTLS) client certificate (.p12/.pem) is additionally mandatory on every request, including the token request, per Brazilian Central Bank rules.'
+      flows:
+        clientCredentials:
+          tokenUrl: https://pix.api.efipay.com.br/oauth/token
+          scopes:
+            cob.write: Create and revise immediate Pix charges.
+            cob.read: Read immediate Pix charges.
+            cobv.write: Create and revise dated Pix charges.
+            cobv.read: Read dated Pix charges.
+            pix.write: Request Pix refunds.
+            pix.read: Read received Pix and refunds.
+            pix.send: Send Pix (Cash-Out).
+            loc.write: Create payload locations.
+            webhook.write: Configure and delete webhooks.
+            webhook.read: Read webhooks.
+            gn.opb.participants.read: Read Open Finance participants.
+            gn.opb.payment.pix.send: Initiate Pix via Open Finance.
+            gn.opb.payment.pix.read: Read Open Finance payments.
