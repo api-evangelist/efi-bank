@@ -10,7 +10,20 @@ description: Efí (formerly Gerencianet) is a Brazilian payment institution and 
   APIs require OAuth2 client-credentials plus a mutual TLS (mTLS) client certificate
   as mandated by the Brazilian Central Bank; the Cobranças API uses OAuth2 without
   mTLS.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/efi-bank.png
 tags:
 - Payments
 - Pix
@@ -26,119 +39,178 @@ created: '2026-07-12'
 modified: '2026-07-12'
 specificationVersion: '0.19'
 apis:
-- aid: efi-bank:efi-bank-pix-charges-api
-  name: Efí Pix Charges API
-  tags:
-  - Pix
-  - Charges
-  - QR Code
-  - Brazil
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: efi-bank:efi-bank-authorization-api
+  name: Efí Authorization API
+  description: OAuth2 client-credentials token endpoints (per host).
   humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
   baseURL: https://pix.api.efipay.com.br
-  properties:
-  - url: https://dev.efipay.com.br/docs/api-pix/credenciais
-    type: Documentation
-  - url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
-    type: APIReference
-  - url: openapi/efi-bank-openapi.yml
-    type: OpenAPI
-  description: Create and manage Pix charges - immediate charges (cob) and dated
-    charges with due date (cobv) - plus payload locations (loc) that generate the
-    dynamic QR Code and Pix Copia e Cola payload. Requires OAuth2 client-credentials
-    and a mandatory mTLS certificate.
-- aid: efi-bank:efi-bank-pix-payments-api
-  name: Efí Pix Payments API
   tags:
-  - Pix
-  - Payments
-  - Refunds
-  - Cash Out
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://dev.efipay.com.br/docs/api-pix/pix
-  baseURL: https://pix.api.efipay.com.br
+  - Authorization
   properties:
-  - url: https://dev.efipay.com.br/docs/api-pix/credenciais
-    type: Documentation
-  - url: openapi/efi-bank-openapi.yml
-    type: OpenAPI
-  description: Consult received Pix (Cash-In), send Pix directly from the API (Cash-Out),
-    and request or query refunds (devolução) tied to an end-to-end identifier.
-    Requires OAuth2 client-credentials and a mandatory mTLS certificate.
-- aid: efi-bank:efi-bank-pix-webhooks-api
-  name: Efí Pix Webhooks API
-  tags:
-  - Pix
-  - Webhooks
-  - Notifications
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://dev.efipay.com.br/docs/api-pix/webhooks
-  baseURL: https://pix.api.efipay.com.br
-  properties:
-  - url: https://dev.efipay.com.br/docs/api-pix/webhooks
-    type: APIReference
-  - url: openapi/efi-bank-openapi.yml
-    type: OpenAPI
-  description: Register, retrieve, and cancel webhooks that notify your application
-    about received Pix, keyed to a Pix key (chave). Server-to-endpoint HTTPS callbacks,
-    not a WebSocket. Requires OAuth2 client-credentials and a mandatory mTLS certificate.
-- aid: efi-bank:efi-bank-cobrancas-api
-  name: Efí Cobranças (Charges) API
-  tags:
-  - Boleto
-  - Charges
-  - Checkout
-  - Brazil
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://dev.efipay.com.br/docs/api-cobrancas/boleto
-  baseURL: https://cobrancas.api.efipay.com.br
-  properties:
-  - url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
-    type: Documentation
-  - url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
-    type: APIReference
-  - url: openapi/efi-bank-openapi.yml
-    type: OpenAPI
-  description: Issue and manage charges (transações) payable by boleto bancário,
-    credit card, or Pix - one-step or two-step creation, due-date changes, manual
-    settlement (baixa), cancellation, resend, and history. Uses OAuth2
-    client-credentials over HTTP Basic; no mTLS certificate required.
-- aid: efi-bank:efi-bank-carne-api
+  - type: OpenAPI
+    url: openapi/efi-bank-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+- aid: efi-bank:efi-bank-carn-api
   name: Efí Carnê API
+  description: Installment booklets. Host cobrancas.api.efipay.com.br, no mTLS.
+  humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  baseURL: https://pix.api.efipay.com.br
   tags:
   - Carnê
-  - Installments
-  - Boleto
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://dev.efipay.com.br/docs/api-cobrancas/carne
-  baseURL: https://cobrancas.api.efipay.com.br
   properties:
-  - url: https://dev.efipay.com.br/docs/api-cobrancas/carne
-    type: APIReference
-  - url: openapi/efi-bank-openapi.yml
-    type: OpenAPI
-  description: Generate and manage carnês - a batch of installment charges (parcelas)
-    issued together as a booklet. Create a carnê, change parcel due dates, cancel or
-    settle the whole booklet or individual parcels, and resend by email. Uses OAuth2
-    client-credentials; no mTLS certificate required.
-- aid: efi-bank:efi-bank-open-finance-pix-api
-  name: Efí Pix via Open Finance API
+  - type: OpenAPI
+    url: openapi/efi-bank-carn-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+- aid: efi-bank:efi-bank-cobran-as-api
+  name: Efí Cobranças API
+  description: Boleto / card / Pix charges. Host cobrancas.api.efipay.com.br, no mTLS.
+  humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  baseURL: https://pix.api.efipay.com.br
+  tags:
+  - Cobranças
+  properties:
+  - type: OpenAPI
+    url: openapi/efi-bank-cobran-as-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+- aid: efi-bank:efi-bank-open-finance-api
+  name: Efí Open Finance API
+  description: >-
+    Pix payment initiation via Open Finance. Host openfinance.api.efipay.com.br, mTLS required.
+  humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  baseURL: https://pix.api.efipay.com.br
   tags:
   - Open Finance
-  - Pix
-  - Payment Initiation
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://dev.efipay.com.br/docs/api-open-finance/credenciais
-  baseURL: https://openfinance.api.efipay.com.br
   properties:
-  - url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
-    type: Documentation
-  - url: openapi/efi-bank-openapi.yml
-    type: OpenAPI
-  description: Initiate Pix payments as a payment initiator across banks and fintechs
-    connected to Brazil's Open Finance ecosystem, query participants, and consult or
-    reverse initiated payments. Requires OAuth2 client-credentials and a mandatory
-    mTLS certificate.
+  - type: OpenAPI
+    url: openapi/efi-bank-open-finance-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+- aid: efi-bank:efi-bank-pix-charges-api
+  name: Efí Pix Charges API
+  description: >-
+    Immediate (cob) and dated (cobv) Pix charges and payload locations. Host pix.api.efipay.com.br, mTLS
+    required.
+  humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  baseURL: https://pix.api.efipay.com.br
+  tags:
+  - Pix Charges
+  properties:
+  - type: OpenAPI
+    url: openapi/efi-bank-pix-charges-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+- aid: efi-bank:efi-bank-pix-payments-api
+  name: Efí Pix Payments API
+  description: Received Pix, sent Pix, and refunds. Host pix.api.efipay.com.br, mTLS required.
+  humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  baseURL: https://pix.api.efipay.com.br
+  tags:
+  - Pix Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/efi-bank-pix-payments-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
+- aid: efi-bank:efi-bank-pix-webhooks-api
+  name: Efí Pix Webhooks API
+  description: >-
+    Webhook registration for received-Pix notifications. Host pix.api.efipay.com.br, mTLS required.
+  humanURL: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  baseURL: https://pix.api.efipay.com.br
+  tags:
+  - Pix Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/efi-bank-pix-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-pix/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-pix/webhooks
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-cobrancas/credenciais
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/boleto
+  - type: APIReference
+    url: https://dev.efipay.com.br/docs/api-cobrancas/carne
+  - type: Documentation
+    url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
 common:
 - type: AgenticAccess
   url: agentic-access/efi-bank-agentic-access.yml
