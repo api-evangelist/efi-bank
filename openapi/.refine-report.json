@@ -1,0 +1,26 @@
+{
+  "provider": "efi-bank",
+  "sources": [
+    "efi-bank-authorization-api-openapi.yml",
+    "efi-bank-carn-api-openapi.yml",
+    "efi-bank-cobran-as-api-openapi.yml",
+    "efi-bank-open-finance-api-openapi.yml",
+    "efi-bank-pix-charges-api-openapi.yml",
+    "efi-bank-pix-payments-api-openapi.yml",
+    "efi-bank-pix-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "efi-bank-authorization-api-openapi.yml",
+    "efi-bank-carn-api-openapi.yml",
+    "efi-bank-cobran-as-api-openapi.yml",
+    "efi-bank-open-finance-api-openapi.yml",
+    "efi-bank-pix-charges-api-openapi.yml",
+    "efi-bank-pix-payments-api-openapi.yml",
+    "efi-bank-pix-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
