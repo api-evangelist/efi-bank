@@ -1,0 +1,757 @@
+{
+  "item": [
+    {
+      "id": "3f916672-e1cb-48bc-977a-37b874a0f722",
+      "name": "Pix Webhooks",
+      "description": {
+        "content": "Webhook registration for received-Pix notifications. Host pix.api.efipay.com.br, mTLS required.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d8fba647-2a17-46c6-b84f-42b8e9f27082",
+          "name": "Configure a Pix webhook",
+          "request": {
+            "name": "Configure a Pix webhook",
+            "description": {
+              "content": "Registers the callback URL that Efí will POST received-Pix notifications to for a given Pix key. Scope webhook.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhook",
+                ":chave"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "chave",
+                  "description": "(Required) The Pix key (chave) the webhook is associated with."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"webhookUrl\": \"<uri>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "aa2b34ff-0e5c-4666-9d48-be560cd12897",
+              "name": "Webhook configured.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"webhookUrl\": \"<uri>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"webhookUrl\": \"<uri>\",\n  \"chave\": \"string\",\n  \"criacao\": \"2002-08-15T02:48:31.015Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38e7ce9e-3878-4b74-8c8e-bbf1c02f7e07",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"webhookUrl\": \"<uri>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7b9d7ee6-18b8-45cb-a494-5815f39d1134",
+          "name": "Retrieve a Pix webhook",
+          "request": {
+            "name": "Retrieve a Pix webhook",
+            "description": {
+              "content": "Retrieves the webhook configured for a given Pix key. Scope webhook.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhook",
+                ":chave"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "chave",
+                  "description": "(Required) The Pix key (chave) the webhook is associated with."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "953bd7b9-beb2-4e20-b5cf-40bae63351d5",
+              "name": "The configured webhook.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"webhookUrl\": \"<uri>\",\n  \"chave\": \"string\",\n  \"criacao\": \"2002-08-15T02:48:31.015Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8efe0539-7de4-42d5-90a2-8a8f7ab5c17b",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9abb0ab9-a289-4eec-9ae4-9f4c34e40e03",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "29a0a143-9063-4730-9c95-d325ca0dcd2e",
+          "name": "Cancel a Pix webhook",
+          "request": {
+            "name": "Cancel a Pix webhook",
+            "description": {
+              "content": "Cancels the webhook associated with a given Pix key. Scope webhook.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhook",
+                ":chave"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "chave",
+                  "description": "(Required) The Pix key (chave) the webhook is associated with."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "50ccd95f-ffb5-4c59-9bf4-36af357a5447",
+              "name": "Webhook cancelled.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a2babd71-5f3c-4ada-9cdf-0262e4402dab",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ed9d10dc-4e3f-46a2-8509-25bcc1edc2a3",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook",
+                    ":chave"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chave",
+                      "description": "(Required) The Pix key (chave) the webhook is associated with."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "52df1d34-f007-4c0e-91b7-49ab13977ba8",
+          "name": "List Pix webhooks",
+          "request": {
+            "name": "List Pix webhooks",
+            "description": {
+              "content": "Lists webhooks associated with Pix keys, filtered by parameters. Scope webhook.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "webhook"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "00dbbc8c-4bad-4ae5-a808-628773757eb3",
+              "name": "A list of webhooks.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"webhooks\": [\n    {\n      \"webhookUrl\": \"<uri>\",\n      \"chave\": \"string\",\n      \"criacao\": \"1975-06-13T16:14:11.058Z\"\n    },\n    {\n      \"webhookUrl\": \"<uri>\",\n      \"chave\": \"string\",\n      \"criacao\": \"2016-07-20T15:38:43.087Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6f714167-d53a-47e0-afb3-4decf81be520",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "webhook"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pix.api.efipay.com.br",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "cob.write cob.read cobv.write cobv.read pix.write pix.read pix.send loc.write webhook.write webhook.read gn.opb.participants.read gn.opb.payment.pix.send gn.opb.payment.pix.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://pix.api.efipay.com.br/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ffc607b4-0a1e-43a3-bd0a-2c2c699d4651",
+    "name": "Efí (formerly Gerencianet) Payments Authorization Pix Webhooks API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation.\n\nContact Support:\n Name: Efí Developers",
+      "type": "text/plain"
+    }
+  }
+}

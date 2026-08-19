@@ -1,0 +1,191 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments Authorization Pix Charges API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://pix.api.efipay.com.br/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pix Charges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List immediate Pix charges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/cob",
+            "params": [
+              {
+                "name": "inicio",
+                "value": "",
+                "type": "query",
+                "description": "Start of the filter interval (RFC 3339 timestamp)."
+              },
+              {
+                "name": "fim",
+                "value": "",
+                "type": "query",
+                "description": "End of the filter interval (RFC 3339 timestamp)."
+              }
+            ]
+          },
+          "docs": "Lists immediate charges over a date range. Query parameters inicio and fim are mandatory. Scope cob.read."
+        },
+        {
+          "info": {
+            "name": "Create an immediate Pix charge (server-generated txid)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v2/cob",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates an immediate Pix charge (cob) without providing a txid; Efí generates it. Scope cob.write."
+        },
+        {
+          "info": {
+            "name": "Retrieve an immediate Pix charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/cob/:txid",
+            "params": [
+              {
+                "name": "txid",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier (26-35 alphanumeric characters)."
+              }
+            ]
+          },
+          "docs": "Retrieves an immediate charge by txid; supports the optional revisao query parameter. Scope cob.read."
+        },
+        {
+          "info": {
+            "name": "Create an immediate Pix charge with a given txid",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/cob/:txid",
+            "params": [
+              {
+                "name": "txid",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier (26-35 alphanumeric characters)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates an immediate Pix charge (cob) using a caller-supplied txid. Scope cob.write."
+        },
+        {
+          "info": {
+            "name": "Revise an immediate Pix charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://pix.api.efipay.com.br/v2/cob/:txid",
+            "params": [
+              {
+                "name": "txid",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier (26-35 alphanumeric characters)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Revises fields of an existing immediate charge, creating a new revision. Scope cob.write."
+        },
+        {
+          "info": {
+            "name": "Retrieve a dated Pix charge (cobv)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/cobv/:txid",
+            "params": [
+              {
+                "name": "txid",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier (26-35 alphanumeric characters)."
+              }
+            ]
+          },
+          "docs": "Retrieves a dated charge by txid. Modeled on the BACEN Pix API v2 standard. Scope cobv.read."
+        },
+        {
+          "info": {
+            "name": "Create a dated Pix charge (cobv)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/cobv/:txid",
+            "params": [
+              {
+                "name": "txid",
+                "value": "",
+                "type": "path",
+                "description": "Transaction identifier (26-35 alphanumeric characters)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a Pix charge with a due date (cobv). Modeled on the Brazilian Central Bank Pix API v2 standard that Efí implements. Scope cobv.write."
+        },
+        {
+          "info": {
+            "name": "Create a payload location",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v2/loc",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a payload location (loc) used to generate the dynamic QR Code / Pix Copia e Cola payload. Modeled on the BACEN Pix API v2 standard. Scope loc.write."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,335 @@
+{
+  "item": [
+    {
+      "id": "d2974510-49ef-4d90-9adc-3c73ac845206",
+      "name": "Open Finance",
+      "description": {
+        "content": "Pix payment initiation via Open Finance. Host openfinance.api.efipay.com.br, mTLS required.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "326a5a5b-2a5d-40bd-b4d2-755282ddd038",
+          "name": "List Open Finance participants",
+          "request": {
+            "name": "List Open Finance participants",
+            "description": {
+              "content": "Lists the banks and fintechs available as payment sources in Brazil's Open Finance ecosystem. Modeled from Efí's documented Open Finance scopes (gn.opb.participants.read); path shown is representative. Scope gn.opb.participants.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "open-finance",
+                "participants"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d86c1142-43a0-421a-9961-b494bdb8bd00",
+              "name": "A list of participants.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "open-finance",
+                    "participants"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"participants\": [\n    {\n      \"identification\": \"string\",\n      \"name\": \"string\"\n    },\n    {\n      \"identification\": \"string\",\n      \"name\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2429cc60-aa46-48d6-b37e-39f00368d7d2",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "open-finance",
+                    "participants"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d0ba75c5-e632-4477-8190-0bc7478f3eec",
+          "name": "Initiate a Pix payment via Open Finance",
+          "request": {
+            "name": "Initiate a Pix payment via Open Finance",
+            "description": {
+              "content": "Initiates a Pix payment as a payment initiator across an Open Finance participant. Modeled from Efí's documented scope gn.opb.payment.pix.send; path shown is representative.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "open-finance",
+                "payments",
+                "pix"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payer\": {\n    \"participant\": \"<string>\"\n  },\n  \"pix\": {\n    \"key_0\": 1722.734127379103\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cc3b0650-709a-4d14-90b0-c5397b52be5a",
+              "name": "The initiated payment.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "open-finance",
+                    "payments",
+                    "pix"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payer\": {\n    \"participant\": \"<string>\"\n  },\n  \"pix\": {\n    \"key_0\": 2391.962615207414\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"payer\": {\n    \"participant\": \"<string>\"\n  },\n  \"pix\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\"\n  },\n  \"identifierPayment\": \"string\",\n  \"status\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e7ed95f8-2b5f-4bd8-9415-7b86c37f7661",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "open-finance",
+                    "payments",
+                    "pix"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payer\": {\n    \"participant\": \"<string>\"\n  },\n  \"pix\": {\n    \"key_0\": 2391.962615207414\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pix.api.efipay.com.br",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "cob.write cob.read cobv.write cobv.read pix.write pix.read pix.send loc.write webhook.write webhook.read gn.opb.participants.read gn.opb.payment.pix.send gn.opb.payment.pix.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://pix.api.efipay.com.br/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "10188c3f-0337-4db3-bc47-8d7df349da51",
+    "name": "Efí (formerly Gerencianet) Payments Authorization Open Finance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation.\n\nContact Support:\n Name: Efí Developers",
+      "type": "text/plain"
+    }
+  }
+}

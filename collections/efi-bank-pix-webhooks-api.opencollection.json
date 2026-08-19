@@ -1,0 +1,101 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments Authorization Pix Webhooks API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://pix.api.efipay.com.br/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pix Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a Pix webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/webhook/:chave",
+            "params": [
+              {
+                "name": "chave",
+                "value": "",
+                "type": "path",
+                "description": "The Pix key (chave) the webhook is associated with."
+              }
+            ]
+          },
+          "docs": "Retrieves the webhook configured for a given Pix key. Scope webhook.read."
+        },
+        {
+          "info": {
+            "name": "Configure a Pix webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/webhook/:chave",
+            "params": [
+              {
+                "name": "chave",
+                "value": "",
+                "type": "path",
+                "description": "The Pix key (chave) the webhook is associated with."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers the callback URL that Efí will POST received-Pix notifications to for a given Pix key. Scope webhook.write."
+        },
+        {
+          "info": {
+            "name": "Cancel a Pix webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://pix.api.efipay.com.br/v2/webhook/:chave",
+            "params": [
+              {
+                "name": "chave",
+                "value": "",
+                "type": "path",
+                "description": "The Pix key (chave) the webhook is associated with."
+              }
+            ]
+          },
+          "docs": "Cancels the webhook associated with a given Pix key. Scope webhook.write."
+        },
+        {
+          "info": {
+            "name": "List Pix webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/webhook"
+          },
+          "docs": "Lists webhooks associated with Pix keys, filtered by parameters. Scope webhook.read."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

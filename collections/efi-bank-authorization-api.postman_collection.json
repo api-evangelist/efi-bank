@@ -1,0 +1,511 @@
+{
+  "item": [
+    {
+      "id": "2db43e93-a677-4575-86ee-372b8afbd90a",
+      "name": "Authorization",
+      "description": {
+        "content": "OAuth2 client-credentials token endpoints (per host).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9c7f1dfe-0c6a-4f1f-828d-5a052a1ffe67",
+          "name": "Obtain a Pix API access token",
+          "request": {
+            "name": "Obtain a Pix API access token",
+            "description": {
+              "content": "OAuth2 client-credentials token endpoint for the Pix API host. Send HTTP Basic auth with Client_Id and Client_Secret. This request also requires the mTLS client certificate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2c50c094-dc88-4154-998d-5823d05dadfd",
+              "name": "Access token issued.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 5939,\n  \"scope\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "09c8d7b2-e133-481a-ad4c-000c197a586c",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "184598af-1c3c-492d-b529-54b7fbb4a8d9",
+          "name": "Obtain a Cobranças API access token",
+          "request": {
+            "name": "Obtain a Cobranças API access token",
+            "description": {
+              "content": "OAuth2 client-credentials token endpoint for the Cobranças host. Send HTTP Basic auth with Client_Id and Client_Secret. No mTLS certificate is required for this host.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "authorize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "77082f4e-0032-45eb-9d4e-3989a9b76997",
+              "name": "Access token issued.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 5939,\n  \"scope\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "504f7574-4d1e-46be-90c3-99d442ca313b",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "authorize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8457bb8e-9c25-425d-9c4a-d39e37ae4b5b",
+          "name": "Obtain an Open Finance API access token",
+          "request": {
+            "name": "Obtain an Open Finance API access token",
+            "description": {
+              "content": "OAuth2 client-credentials token endpoint for the Open Finance host. Send HTTP Basic auth with Client_Id and Client_Secret. This request also requires the mTLS client certificate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9bbf26fe-8da4-493a-9502-b4f4718a8d61",
+              "name": "Access token issued.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"string\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 5939,\n  \"scope\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1bf296f1-09f4-4f09-aaff-c75a599e436f",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"grant_type\": \"client_credentials\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pix.api.efipay.com.br",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "cob.write cob.read cobv.write cobv.read pix.write pix.read pix.send loc.write webhook.write webhook.read gn.opb.participants.read gn.opb.payment.pix.send gn.opb.payment.pix.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://pix.api.efipay.com.br/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4c1cbdb4-635f-4abc-a186-a07eb68403e7",
+    "name": "Efí (formerly Gerencianet) Payments Authorization API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation.\n\nContact Support:\n Name: Efí Developers",
+      "type": "text/plain"
+    }
+  }
+}

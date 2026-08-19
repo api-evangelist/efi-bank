@@ -1,0 +1,855 @@
+{
+  "item": [
+    {
+      "id": "9023809a-e942-4f9e-82c9-b2060c21b9c9",
+      "name": "Pix Payments",
+      "description": {
+        "content": "Received Pix, sent Pix, and refunds. Host pix.api.efipay.com.br, mTLS required.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "973de79e-272d-4d23-ab97-54bcf494e54c",
+          "name": "List received Pix",
+          "request": {
+            "name": "List received Pix",
+            "description": {
+              "content": "Lists received Pix over a date range (Cash-In). Query parameters inicio and fim are mandatory. Modeled on the BACEN Pix API v2 standard. Scope pix.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "pix"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "inicio",
+                  "value": "<dateTime>",
+                  "description": "(Required) Start of the filter interval (RFC 3339 timestamp)."
+                },
+                {
+                  "disabled": false,
+                  "key": "fim",
+                  "value": "<dateTime>",
+                  "description": "(Required) End of the filter interval (RFC 3339 timestamp)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "93059657-fad2-4ae3-85e4-387cd5898066",
+              "name": "A paginated list of received Pix.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "inicio",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fim",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"pix\": [\n    {\n      \"endToEndId\": \"string\",\n      \"txid\": \"string\",\n      \"valor\": \"string\",\n      \"horario\": \"2006-02-13T05:06:23.381Z\",\n      \"pagador\": {\n        \"key_0\": 776.7533195065446\n      }\n    },\n    {\n      \"endToEndId\": \"string\",\n      \"txid\": \"string\",\n      \"valor\": \"string\",\n      \"horario\": \"1981-06-09T23:16:17.154Z\",\n      \"pagador\": {\n        \"key_0\": true,\n        \"key_1\": true,\n        \"key_2\": 5684.162286898569\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7c5f277f-7304-4320-a88c-8c2260b609fd",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "inicio",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fim",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ed6decc2-ef6b-44d4-906a-c1b2eb91f4c6",
+          "name": "Retrieve a received Pix",
+          "request": {
+            "name": "Retrieve a received Pix",
+            "description": {
+              "content": "Retrieves a single received Pix by its end-to-end id. Modeled on the BACEN Pix API v2 standard. Scope pix.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "pix",
+                ":e2eid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "e2eid",
+                  "description": "(Required) The end-to-end identifier of the Pix transaction."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "261563f4-65f3-4774-9b75-351e92a28a73",
+              "name": "The requested received Pix.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"endToEndId\": \"string\",\n  \"txid\": \"string\",\n  \"valor\": \"string\",\n  \"horario\": \"1947-02-11T01:58:22.587Z\",\n  \"pagador\": {\n    \"key_0\": 9129,\n    \"key_1\": 2383.567856944776\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "12b4b8c9-dd9d-47e0-bf23-4d77694fcc5d",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "56fda499-bb0c-446a-932e-4ae8221c458a",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd69e4cf-a26a-4dbe-8822-c69835490fb6",
+          "name": "Request a Pix refund (devolução)",
+          "request": {
+            "name": "Request a Pix refund (devolução)",
+            "description": {
+              "content": "Requests a refund (devolução) for a received Pix, identified by the end-to-end id and a client refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "pix",
+                ":e2eid",
+                "devolucao",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "e2eid",
+                  "description": "(Required) The end-to-end identifier of the Pix transaction."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Client-defined refund identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"valor\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e95146cf-9b0f-488d-b3af-0d7bc752ab5a",
+              "name": "The created refund.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid",
+                    "devolucao",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Client-defined refund identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"valor\": \"12.34\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"valor\": \"12.34\",\n  \"id\": \"string\",\n  \"rtrId\": \"string\",\n  \"status\": \"NAO_REALIZADO\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4f32f969-741b-44f2-bd0c-13ea79372f50",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid",
+                    "devolucao",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Client-defined refund identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"valor\": \"12.34\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "898fecfe-c60b-42c8-bb13-388f724edd98",
+          "name": "Retrieve a Pix refund",
+          "request": {
+            "name": "Retrieve a Pix refund",
+            "description": {
+              "content": "Retrieves a refund by end-to-end id and refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "pix",
+                ":e2eid",
+                "devolucao",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "e2eid",
+                  "description": "(Required) The end-to-end identifier of the Pix transaction."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Client-defined refund identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fd17e519-c7b9-4121-bf1c-39568f1c4f27",
+              "name": "The requested refund.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid",
+                    "devolucao",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Client-defined refund identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"valor\": \"12.34\",\n  \"id\": \"string\",\n  \"rtrId\": \"string\",\n  \"status\": \"NAO_REALIZADO\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "28b75a5e-a4f1-455a-847f-6715025c1217",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid",
+                    "devolucao",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Client-defined refund identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c6654c81-0d10-4885-b0ae-f9cc76e970a7",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "pix",
+                    ":e2eid",
+                    "devolucao",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "e2eid",
+                      "description": "(Required) The end-to-end identifier of the Pix transaction."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Client-defined refund identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pix.api.efipay.com.br",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "cob.write cob.read cobv.write cobv.read pix.write pix.read pix.send loc.write webhook.write webhook.read gn.opb.participants.read gn.opb.payment.pix.send gn.opb.payment.pix.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://pix.api.efipay.com.br/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "38324b56-ef53-46a7-bbb7-eab63414e779",
+    "name": "Efí (formerly Gerencianet) Payments Authorization Pix Payments API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation.\n\nContact Support:\n Name: Efí Developers",
+      "type": "text/plain"
+    }
+  }
+}

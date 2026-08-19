@@ -1,0 +1,55 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments Authorization Open Finance API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://pix.api.efipay.com.br/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Open Finance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Open Finance participants",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v1/open-finance/participants"
+          },
+          "docs": "Lists the banks and fintechs available as payment sources in Brazil's Open Finance ecosystem. Modeled from Efí's documented Open Finance scopes (gn.opb.participants.read); path shown is representative. Scope gn.opb.participants.read."
+        },
+        {
+          "info": {
+            "name": "Initiate a Pix payment via Open Finance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v1/open-finance/payments/pix",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiates a Pix payment as a payment initiator across an Open Finance participant. Modeled from Efí's documented scope gn.opb.payment.pix.send; path shown is representative."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

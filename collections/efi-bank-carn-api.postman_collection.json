@@ -1,0 +1,921 @@
+{
+  "item": [
+    {
+      "id": "59568cdd-9900-473b-b549-a78ad5ae96ff",
+      "name": "Carnê",
+      "description": {
+        "content": "Installment booklets. Host cobrancas.api.efipay.com.br, no mTLS.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "848a3059-e30e-442c-b11e-fd3dec7ecb44",
+          "name": "Create a carnê",
+          "request": {
+            "name": "Create a carnê",
+            "description": {
+              "content": "Creates a carnê - a set of installment charges (parcelas) generated in a batch.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "carnet"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<integer>\",\n      \"amount\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<integer>\",\n      \"amount\": \"<integer>\"\n    }\n  ],\n  \"customer\": {\n    \"key_0\": 5227.3636649244545\n  },\n  \"repeats\": \"<integer>\",\n  \"expire_at\": \"<date>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "398595ef-998c-4e6b-a15f-73967f792098",
+              "name": "The created carnê.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"items\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<integer>\",\n      \"amount\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<integer>\",\n      \"amount\": \"<integer>\"\n    }\n  ],\n  \"customer\": {\n    \"key_0\": \"string\"\n  },\n  \"repeats\": \"<integer>\",\n  \"expire_at\": \"<date>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"carnet_id\": 7771,\n  \"status\": \"string\",\n  \"charges\": [\n    {\n      \"parcel\": 6800,\n      \"expire_at\": \"1972-02-14\",\n      \"status\": \"string\"\n    },\n    {\n      \"parcel\": 1186,\n      \"expire_at\": \"1980-08-16\",\n      \"status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07fe73b4-56c0-44dd-9472-0b8b0cc928db",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"items\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<integer>\",\n      \"amount\": \"<integer>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<integer>\",\n      \"amount\": \"<integer>\"\n    }\n  ],\n  \"customer\": {\n    \"key_0\": \"string\"\n  },\n  \"repeats\": \"<integer>\",\n  \"expire_at\": \"<date>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f87dbf41-717c-4924-897a-4f52f0a13c33",
+          "name": "Retrieve a carnê",
+          "request": {
+            "name": "Retrieve a carnê",
+            "description": {
+              "content": "Returns information for an existing carnê by id.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "carnet",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) The carnê identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d765ceb5-37bb-4400-a3d6-837a514242c0",
+              "name": "The requested carnê.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"carnet_id\": 3931,\n  \"status\": \"string\",\n  \"charges\": [\n    {\n      \"parcel\": 1608,\n      \"expire_at\": \"1978-07-11\",\n      \"status\": \"string\"\n    },\n    {\n      \"parcel\": 9570,\n      \"expire_at\": \"1957-03-09\",\n      \"status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2177a76d-2eb7-4b87-b386-8a06bb187212",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "faba14f4-6c87-49e3-af12-c54c59aec4d9",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "be6bb96f-002a-4504-8904-11583b01c661",
+          "name": "Change a parcel's due date",
+          "request": {
+            "name": "Change a parcel's due date",
+            "description": {
+              "content": "Alters the expiration date of a specific carnê parcel.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "carnet",
+                ":id",
+                "parcel",
+                ":parcel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) The carnê identifier."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "parcel",
+                  "description": "(Required) The installment (parcela) number."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"expire_at\": \"<date>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cb486b99-8455-4dab-8203-088cc211cffa",
+              "name": "The updated carnê.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id",
+                    "parcel",
+                    ":parcel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "parcel",
+                      "description": "(Required) The installment (parcela) number."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expire_at\": \"<date>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"carnet_id\": 3931,\n  \"status\": \"string\",\n  \"charges\": [\n    {\n      \"parcel\": 1608,\n      \"expire_at\": \"1978-07-11\",\n      \"status\": \"string\"\n    },\n    {\n      \"parcel\": 9570,\n      \"expire_at\": \"1957-03-09\",\n      \"status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3402088b-b811-49c1-96a9-1bc47184160b",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id",
+                    "parcel",
+                    ":parcel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "parcel",
+                      "description": "(Required) The installment (parcela) number."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"expire_at\": \"<date>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "95b8424b-644d-43ca-b770-85305d8a5eae",
+          "name": "Cancel a carnê",
+          "request": {
+            "name": "Cancel a carnê",
+            "description": {
+              "content": "Cancels an entire carnê and all of its open parcels.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "carnet",
+                ":id",
+                "cancel"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) The carnê identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "561103c0-e9f3-4630-8523-a78652dbba02",
+              "name": "The cancelled carnê.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"carnet_id\": 3931,\n  \"status\": \"string\",\n  \"charges\": [\n    {\n      \"parcel\": 1608,\n      \"expire_at\": \"1978-07-11\",\n      \"status\": \"string\"\n    },\n    {\n      \"parcel\": 9570,\n      \"expire_at\": \"1957-03-09\",\n      \"status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c8044df-9393-416f-b99f-8d01e5bdb064",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id",
+                    "cancel"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "58bc5fbd-1de4-40bc-aa3a-05297865443d",
+          "name": "Manually settle a carnê",
+          "request": {
+            "name": "Manually settle a carnê",
+            "description": {
+              "content": "Marks an entire carnê as paid (baixa manual).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "carnet",
+                ":id",
+                "settle"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) The carnê identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0a527a81-d3c4-40e2-953e-132f40f6410f",
+              "name": "The settled carnê.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id",
+                    "settle"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"carnet_id\": 3931,\n  \"status\": \"string\",\n  \"charges\": [\n    {\n      \"parcel\": 1608,\n      \"expire_at\": \"1978-07-11\",\n      \"status\": \"string\"\n    },\n    {\n      \"parcel\": 9570,\n      \"expire_at\": \"1957-03-09\",\n      \"status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "905969ad-9956-4acd-826b-e15f5ef01d12",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "carnet",
+                    ":id",
+                    "settle"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The carnê identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pix.api.efipay.com.br",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "cob.write cob.read cobv.write cobv.read pix.write pix.read pix.send loc.write webhook.write webhook.read gn.opb.participants.read gn.opb.payment.pix.send gn.opb.payment.pix.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://pix.api.efipay.com.br/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "84da3ab4-423c-4cd9-816a-580518f327a1",
+    "name": "Efí (formerly Gerencianet) Payments Authorization Carnê API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation.\n\nContact Support:\n Name: Efí Developers",
+      "type": "text/plain"
+    }
+  }
+}

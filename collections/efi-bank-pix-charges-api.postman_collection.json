@@ -1,0 +1,1458 @@
+{
+  "item": [
+    {
+      "id": "487a6029-40c3-4c5b-a1a0-28b521888fad",
+      "name": "Pix Charges",
+      "description": {
+        "content": "Immediate (cob) and dated (cobv) Pix charges and payload locations. Host pix.api.efipay.com.br, mTLS required.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0643bb08-df4e-438b-aaf2-ef60f4eb6c36",
+          "name": "Create an immediate Pix charge (server-generated txid)",
+          "request": {
+            "name": "Create an immediate Pix charge (server-generated txid)",
+            "description": {
+              "content": "Creates an immediate Pix charge (cob) without providing a txid; Efí generates it. Scope cob.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cob"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendario\": {\n    \"expiracao\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"<string>\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "23bd72c6-b8cc-4e56-b6ab-0701f8857a38",
+              "name": "The created immediate charge.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\",\n  \"txid\": \"string\",\n  \"revisao\": 312,\n  \"status\": \"REMOVIDA_PELO_PSP\",\n  \"location\": \"string\",\n  \"pixCopiaECola\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "668e0eea-51b8-4cec-9a93-8f7da93bdcca",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8cf82398-373c-4812-aa8d-400aad7138b7",
+          "name": "List immediate Pix charges",
+          "request": {
+            "name": "List immediate Pix charges",
+            "description": {
+              "content": "Lists immediate charges over a date range. Query parameters inicio and fim are mandatory. Scope cob.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cob"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "inicio",
+                  "value": "<dateTime>",
+                  "description": "(Required) Start of the filter interval (RFC 3339 timestamp)."
+                },
+                {
+                  "disabled": false,
+                  "key": "fim",
+                  "value": "<dateTime>",
+                  "description": "(Required) End of the filter interval (RFC 3339 timestamp)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4e9e6eed-de70-498b-a948-51306f61c21b",
+              "name": "A paginated list of immediate charges.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "inicio",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fim",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"parametros\": {\n    \"key_0\": \"string\"\n  },\n  \"cobs\": [\n    {\n      \"calendario\": {\n        \"expiracao\": 3600\n      },\n      \"devedor\": {\n        \"cpf\": \"<string>\",\n        \"cnpj\": \"<string>\",\n        \"nome\": \"<string>\"\n      },\n      \"valor\": {\n        \"original\": \"123.45\"\n      },\n      \"chave\": \"<string>\",\n      \"solicitacaoPagador\": \"<string>\",\n      \"txid\": \"string\",\n      \"revisao\": 1251,\n      \"status\": \"REMOVIDA_PELO_USUARIO_RECEBEDOR\",\n      \"location\": \"string\",\n      \"pixCopiaECola\": \"string\"\n    },\n    {\n      \"calendario\": {\n        \"expiracao\": 3600\n      },\n      \"devedor\": {\n        \"cpf\": \"<string>\",\n        \"cnpj\": \"<string>\",\n        \"nome\": \"<string>\"\n      },\n      \"valor\": {\n        \"original\": \"123.45\"\n      },\n      \"chave\": \"<string>\",\n      \"solicitacaoPagador\": \"<string>\",\n      \"txid\": \"string\",\n      \"revisao\": 4579,\n      \"status\": \"REMOVIDA_PELO_PSP\",\n      \"location\": \"string\",\n      \"pixCopiaECola\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a99e92a-af12-46bb-8ecc-23fdc79bcb8f",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "inicio",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "fim",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e58c6a85-98eb-4a7f-97d6-d5fddd2b0a68",
+          "name": "Create an immediate Pix charge with a given txid",
+          "request": {
+            "name": "Create an immediate Pix charge with a given txid",
+            "description": {
+              "content": "Creates an immediate Pix charge (cob) using a caller-supplied txid. Scope cob.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cob",
+                ":txid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "txid",
+                  "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendario\": {\n    \"expiracao\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"<string>\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "040000df-fc8e-49ff-9f16-4899f06d025d",
+              "name": "The created immediate charge.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\",\n  \"txid\": \"string\",\n  \"revisao\": 312,\n  \"status\": \"REMOVIDA_PELO_PSP\",\n  \"location\": \"string\",\n  \"pixCopiaECola\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "662d88c3-046e-4149-b800-32cb346a2cba",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "65194d17-9f86-4983-a217-701cb28393ae",
+          "name": "Revise an immediate Pix charge",
+          "request": {
+            "name": "Revise an immediate Pix charge",
+            "description": {
+              "content": "Revises fields of an existing immediate charge, creating a new revision. Scope cob.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cob",
+                ":txid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "txid",
+                  "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendario\": {\n    \"expiracao\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"<string>\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "486139d7-21f5-4972-a739-0d0a08010701",
+              "name": "The revised immediate charge.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\",\n  \"txid\": \"string\",\n  \"revisao\": 312,\n  \"status\": \"REMOVIDA_PELO_PSP\",\n  \"location\": \"string\",\n  \"pixCopiaECola\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1edab936-984d-422a-acd1-4b3e71ba1e84",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b4dc4f31-d28d-4d34-aab2-3af5d34156f3",
+          "name": "Retrieve an immediate Pix charge",
+          "request": {
+            "name": "Retrieve an immediate Pix charge",
+            "description": {
+              "content": "Retrieves an immediate charge by txid; supports the optional revisao query parameter. Scope cob.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cob",
+                ":txid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "txid",
+                  "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "bce48e38-35a2-4ed5-b9e4-9e2f4e81445b",
+              "name": "The requested immediate charge.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calendario\": {\n    \"expiracao\": 3600\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"solicitacaoPagador\": \"<string>\",\n  \"txid\": \"string\",\n  \"revisao\": 312,\n  \"status\": \"REMOVIDA_PELO_PSP\",\n  \"location\": \"string\",\n  \"pixCopiaECola\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f97b09e6-f0fc-4478-a975-fb1e76040e83",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "66fabdb3-b2fd-4dec-8e62-72555ac0e38b",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cob",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ccda0a05-7a42-4427-a90f-065d088bc9de",
+          "name": "Create a dated Pix charge (cobv)",
+          "request": {
+            "name": "Create a dated Pix charge (cobv)",
+            "description": {
+              "content": "Creates a Pix charge with a due date (cobv). Modeled on the Brazilian Central Bank Pix API v2 standard that Efí implements. Scope cobv.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cobv",
+                ":txid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "txid",
+                  "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calendario\": {\n    \"dataDeVencimento\": \"<date>\",\n    \"validadeAposVencimento\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"<string>\"\n  },\n  \"chave\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e43393b7-221c-41ee-8f72-4b393813eddd",
+              "name": "The created dated charge.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cobv",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"dataDeVencimento\": \"<date>\",\n    \"validadeAposVencimento\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calendario\": {\n    \"dataDeVencimento\": \"<date>\",\n    \"validadeAposVencimento\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"txid\": \"string\",\n  \"status\": \"string\",\n  \"location\": \"string\",\n  \"pixCopiaECola\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57568335-b11e-4667-9ef4-4b4d98bb1f65",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cobv",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"calendario\": {\n    \"dataDeVencimento\": \"<date>\",\n    \"validadeAposVencimento\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "979f62e8-d369-4fe9-9257-c7e2306a18b7",
+          "name": "Retrieve a dated Pix charge (cobv)",
+          "request": {
+            "name": "Retrieve a dated Pix charge (cobv)",
+            "description": {
+              "content": "Retrieves a dated charge by txid. Modeled on the BACEN Pix API v2 standard. Scope cobv.read.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "cobv",
+                ":txid"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "txid",
+                  "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "87ac9a23-30c4-40e8-8af4-3da8a424197d",
+              "name": "The requested dated charge.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cobv",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"calendario\": {\n    \"dataDeVencimento\": \"<date>\",\n    \"validadeAposVencimento\": \"<integer>\"\n  },\n  \"devedor\": {\n    \"cpf\": \"<string>\",\n    \"cnpj\": \"<string>\",\n    \"nome\": \"<string>\"\n  },\n  \"valor\": {\n    \"original\": \"123.45\"\n  },\n  \"chave\": \"<string>\",\n  \"txid\": \"string\",\n  \"status\": \"string\",\n  \"location\": \"string\",\n  \"pixCopiaECola\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "beca30a2-f2aa-4400-a820-f8c26a1cae2e",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cobv",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7444426f-5e65-43ef-9b52-a7bf4ad0f3ab",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "cobv",
+                    ":txid"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "txid",
+                      "description": "(Required) Transaction identifier (26-35 alphanumeric characters)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d1b5b1ed-122f-4bd2-89f9-c17496602aa2",
+          "name": "Create a payload location",
+          "request": {
+            "name": "Create a payload location",
+            "description": {
+              "content": "Creates a payload location (loc) used to generate the dynamic QR Code / Pix Copia e Cola payload. Modeled on the BACEN Pix API v2 standard. Scope loc.write.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "loc"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipoCob\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4ce49ec7-80fa-476d-9c9f-13f18a8f9b36",
+              "name": "The created payload location.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "loc"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tipoCob\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"tipoCob\": \"<string>\",\n  \"id\": 5198,\n  \"location\": \"string\",\n  \"criacao\": \"2025-06-11T15:40:56.330Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eaedd032-a2f2-41af-9b14-b163b42463ef",
+              "name": "Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "loc"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"tipoCob\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"nome\": \"string\",\n  \"mensagem\": \"string\",\n  \"error\": \"string\",\n  \"error_description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://pix.api.efipay.com.br",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "cob.write cob.read cobv.write cobv.read pix.write pix.read pix.send loc.write webhook.write webhook.read gn.opb.participants.read gn.opb.payment.pix.send gn.opb.payment.pix.read"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://pix.api.efipay.com.br/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "83ac1710-7203-49d7-ba74-31dd1f65fb1b",
+    "name": "Efí (formerly Gerencianet) Payments Authorization Pix Charges API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Representative subset of Efí's public REST APIs for the Brazilian financial system. Efí (ex-Gerencianet) is a Brazilian payment institution and digital bank. This document groups operations across several distinct API hosts, each with its own base URL and authentication requirements:\n\n- Pix API - base https://pix.api.efipay.com.br (sandbox\n  https://pix-h.api.efipay.com.br). OAuth2 client-credentials (token at\n  POST /oauth/token) PLUS a mandatory mutual TLS (mTLS) client certificate\n  (.p12/.pem) on every request, as required by the Brazilian Central Bank.\n  Paths under /v2/*.\n\n\n- Cobranças (Charges) API - base https://cobrancas.api.efipay.com.br (sandbox\n  https://cobrancas-h.api.efipay.com.br). OAuth2 client-credentials over HTTP\n  Basic (token at POST /v1/authorize). No mTLS certificate required. Paths\n  under /v1/charge, /v1/charges, /v1/carnet.\n\n\n- Pix via Open Finance API - base https://openfinance.api.efipay.com.br\n  (sandbox https://openfinance-h.api.efipay.com.br). OAuth2 client-credentials\n  (token at POST /v1/oauth/token) PLUS a mandatory mTLS certificate.\n\n\nBecause OpenAPI 3.0 has a single security-scheme model, the mTLS requirement for the Pix and Open Finance hosts is described here in prose and cannot be fully expressed as a securityScheme; treat the mTLS client certificate as mandatory on those hosts in addition to the OAuth2 bearer token. Endpoints marked \"modeled\" in the repository review follow the Brazilian Central Bank Pix API v2 standard that Efí implements; the create/query charge, webhook, charge, and carnê operations were confirmed directly against Efí's public documentation.\n\nContact Support:\n Name: Efí Developers",
+      "type": "text/plain"
+    }
+  }
+}

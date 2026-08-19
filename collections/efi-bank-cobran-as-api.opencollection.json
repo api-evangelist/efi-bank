@@ -1,0 +1,191 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments Authorization Cobranças API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://pix.api.efipay.com.br/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Cobranças",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a charge (two-step)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v1/charge",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a charge (transação) describing the item(s), value, and quantity, before associating a payment method."
+        },
+        {
+          "info": {
+            "name": "Create a charge (one-step)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v1/charge/one-step",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a charge and associates the payment method (boleto, card, or Pix) in a single request."
+        },
+        {
+          "info": {
+            "name": "List charges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v1/charges",
+            "params": [
+              {
+                "name": "charge_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by charge type (for example billet or carnet)."
+              },
+              {
+                "name": "begin_date",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Returns issued charges, filterable by charge_type and date range (begin_date, end_date)."
+        },
+        {
+          "info": {
+            "name": "Retrieve a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v1/charge/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The charge (transação) identifier."
+              }
+            ]
+          },
+          "docs": "Returns information for a single charge (transação) by id."
+        },
+        {
+          "info": {
+            "name": "Associate a payment method to a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v1/charge/:id/pay",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The charge (transação) identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Associates a charge with the desired payment method (boleto bancário, credit card, or Pix)."
+        },
+        {
+          "info": {
+            "name": "Change a charge's boleto due date",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v1/charge/:id/billet",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The charge (transação) identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Alters the expiration (vencimento) date of a boleto charge."
+        },
+        {
+          "info": {
+            "name": "Cancel a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v1/charge/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The charge (transação) identifier."
+              }
+            ]
+          },
+          "docs": "Cancels an existing charge."
+        },
+        {
+          "info": {
+            "name": "Manually settle a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v1/charge/:id/settle",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The charge (transação) identifier."
+              }
+            ]
+          },
+          "docs": "Marks a charge as paid (baixa manual)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

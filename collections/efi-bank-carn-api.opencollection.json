@@ -1,0 +1,130 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments Authorization Carnê API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://pix.api.efipay.com.br/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Carnê",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a carnê",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://pix.api.efipay.com.br/v1/carnet",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a carnê - a set of installment charges (parcelas) generated in a batch."
+        },
+        {
+          "info": {
+            "name": "Retrieve a carnê",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v1/carnet/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The carnê identifier."
+              }
+            ]
+          },
+          "docs": "Returns information for an existing carnê by id."
+        },
+        {
+          "info": {
+            "name": "Change a parcel's due date",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v1/carnet/:id/parcel/:parcel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The carnê identifier."
+              },
+              {
+                "name": "parcel",
+                "value": "",
+                "type": "path",
+                "description": "The installment (parcela) number."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Alters the expiration date of a specific carnê parcel."
+        },
+        {
+          "info": {
+            "name": "Cancel a carnê",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v1/carnet/:id/cancel",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The carnê identifier."
+              }
+            ]
+          },
+          "docs": "Cancels an entire carnê and all of its open parcels."
+        },
+        {
+          "info": {
+            "name": "Manually settle a carnê",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v1/carnet/:id/settle",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The carnê identifier."
+              }
+            ]
+          },
+          "docs": "Marks an entire carnê as paid (baixa manual)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

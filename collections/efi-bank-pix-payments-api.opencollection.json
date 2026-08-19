@@ -1,0 +1,127 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Efí (formerly Gerencianet) Payments Authorization Pix Payments API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://pix.api.efipay.com.br/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Pix Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List received Pix",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/pix",
+            "params": [
+              {
+                "name": "inicio",
+                "value": "",
+                "type": "query",
+                "description": "Start of the filter interval (RFC 3339 timestamp)."
+              },
+              {
+                "name": "fim",
+                "value": "",
+                "type": "query",
+                "description": "End of the filter interval (RFC 3339 timestamp)."
+              }
+            ]
+          },
+          "docs": "Lists received Pix over a date range (Cash-In). Query parameters inicio and fim are mandatory. Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+        },
+        {
+          "info": {
+            "name": "Retrieve a received Pix",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/pix/:e2eid",
+            "params": [
+              {
+                "name": "e2eid",
+                "value": "",
+                "type": "path",
+                "description": "The end-to-end identifier of the Pix transaction."
+              }
+            ]
+          },
+          "docs": "Retrieves a single received Pix by its end-to-end id. Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+        },
+        {
+          "info": {
+            "name": "Retrieve a Pix refund",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://pix.api.efipay.com.br/v2/pix/:e2eid/devolucao/:id",
+            "params": [
+              {
+                "name": "e2eid",
+                "value": "",
+                "type": "path",
+                "description": "The end-to-end identifier of the Pix transaction."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Client-defined refund identifier."
+              }
+            ]
+          },
+          "docs": "Retrieves a refund by end-to-end id and refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.read."
+        },
+        {
+          "info": {
+            "name": "Request a Pix refund (devolução)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://pix.api.efipay.com.br/v2/pix/:e2eid/devolucao/:id",
+            "params": [
+              {
+                "name": "e2eid",
+                "value": "",
+                "type": "path",
+                "description": "The end-to-end identifier of the Pix transaction."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Client-defined refund identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests a refund (devolução) for a received Pix, identified by the end-to-end id and a client refund id. Modeled on the BACEN Pix API v2 standard. Scope pix.write."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
