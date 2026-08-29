@@ -224,6 +224,9 @@ apis:
   - type: Documentation
     url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
 common:
+- type: CapabilityMap
+  url: capabilities/efi-bank-capability-edges.yml
+  name: Efí Business Capability Map
 - type: AgenticAccess
   url: agentic-access/efi-bank-agentic-access.yml
 - type: DomainSecurity
