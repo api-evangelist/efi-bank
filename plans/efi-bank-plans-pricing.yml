@@ -1,141 +1,123 @@
-specification: API Commons Plans
-specificationVersion: '0.1'
-schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
-provider: Efí
-providerId: efi-bank
-created: '2026-07-12'
-modified: '2026-07-12'
-reconciled: false
-tags:
-- Payments
-- Pix
-- Boleto
-- Banking
-- Brazil
-- Plans
-description: >-
-  Efí (formerly Gerencianet) does not sell API access as tiered subscription
-  plans. The APIs (Pix, Cobranças, Carnê, Open Finance) are included with an Efí
-  digital account and are billed per successful transaction rather than by an API
-  plan. Opening the account and generating credentials/certificates is free;
-  generating charges and boletos is free; you pay a fee only when a transaction is
-  settled. The "plans" below therefore describe the account/transaction model, not
-  API rate tiers. All monetary values are in Brazilian Reais (BRL) and are NOT
-  reconciled here - verify current tariffs on the Efí tarifas page, as rates and
-  free allowances change and can be negotiated by volume.
-notes: >-
-  Pricing is per-transaction, not per-API-call. Figures reflect publicly
-  advertised standard rates as of the review date and are unreconciled. Custom /
-  negotiated pricing is available for higher volumes. See finops/ for the FinOps
-  view and rate-limits/ for throughput behavior.
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://sejaefi.com.br/tarifas
 sources:
 - https://sejaefi.com.br/tarifas
-- https://sejaefi.com.br/central-de-ajuda/tarifas-e-prazos
-- https://dev.efipay.com.br/docs/api-pix/credenciais
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T124425
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: ad-valorem
+published: true
+note: Brazilian fee schedule (tarifas) covering banking, boleto, Pix and card acquiring, including API-based
+  Pix/boleto charges. Account opening/maintenance and API integration listed as GRÁTIS. Page notes fees
+  may vary by contract date and commercial negotiation.
+plan_count: 17
+currency: BRL
 plans:
-- id: efi-account
-  name: Efí Digital Account (API access included)
-  type: free
-  description: >-
-    Free Efí account that includes API credentials for Pix, Cobranças, Carnê,
-    and (for partners) Open Finance. No subscription or API plan fee; generating
-    the OAuth2 credentials and the Pix mTLS certificate is free. Revenue is
-    earned per settled transaction (see usage plans below).
-  entries:
-  - label: API Access and Credentials
-    name: api_access
-    type: flat
-    metric: account
-    limit: -1
-    timeFrame: month
-    geo: BR
-    unit: 1
-    price: free (per-transaction billing applies)
-    userMultiplied: false
-  elements:
-  - name: Pix API
-  - name: Cobranças (Charges) API
-  - name: Carnê API
-  - name: Pix via Open Finance API (partner)
-  - name: Sandbox / Homologação Environment
-- id: efi-pix-usage
-  name: Pix - Per Transaction
-  type: usage
-  description: >-
-    Pix charges (Pix Cob and Pix CobV) received via API are billed as a
-    percentage of the transaction. Efí advertises 30 free Pix per month via the
-    app for PJ accounts; API-received Pix follow the percentage tariff.
-    Percentage is unreconciled - verify on the tarifas page.
-  entries:
-  - label: Pix Received via API (Cob / CobV)
-    name: pix_received
-    type: usage
-    metric: transaction
-    limit: -1
-    timeFrame: month
-    geo: BR
-    unit: 1
-    price: ~1.19% per settled Pix (standard advertised rate; unreconciled)
-    userMultiplied: false
-  - label: Pix Automático Settlement
-    name: pix_automatico
-    type: usage
-    metric: transaction
-    limit: -1
-    timeFrame: month
-    geo: BR
-    unit: 1
-    price: ~R$3.50 per settled automatic Pix (advertised; unreconciled)
-    userMultiplied: false
-  elements:
-  - name: Dynamic QR Code
-  - name: Pix Copia e Cola
-  - name: Cash-In and Cash-Out
-- id: efi-boleto-usage
-  name: Boleto / Carnê - Per Settlement
-  type: usage
-  description: >-
-    Boletos and carnê parcels are free to generate; a fixed confirmation fee is
-    charged only when a boleto or parcel is actually paid, regardless of the
-    amount. Fee is unreconciled - verify on the tarifas page.
-  entries:
-  - label: Boleto / Carnê Parcel Settlement
-    name: boleto_settlement
-    type: usage
-    metric: transaction
-    limit: -1
-    timeFrame: month
-    geo: BR
-    unit: 1
-    price: ~R$3.45 fixed per paid boleto / carnê parcel (advertised; unreconciled)
-    userMultiplied: false
-  elements:
-  - name: Free Boleto Generation
-  - name: Bolix (Boleto with Pix)
-  - name: Installment Carnês
-- id: efi-custom
-  name: Negotiated / High Volume
-  type: enterprise
-  description: >-
-    Custom per-transaction rates and free-Pix allowances negotiated for
-    high-volume merchants, marketplaces (payment split), and partners using
-    account-opening and Open Finance APIs. Contact Efí.
-  entries:
-  - label: Negotiated Agreement
-    name: negotiated
-    type: flat
-    metric: contract
-    limit: -1
-    timeFrame: year
-    geo: BR
-    unit: 1
-    price: contact Efí
-    userMultiplied: false
-  elements:
-  - name: Volume Pricing
-  - name: Payment Split (Marketplace)
-  - name: Open Finance Payment Initiation
-  - name: Account Opening API
-maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+- name: Boleto, Bolix e folha de carnê pago - Recebimento
+  price_text: R$3,45
+  price: 3.45
+  currency: BRL
+  period: per-use
+  unit: por recebimento
+  included_quota: Emissão, baixa, cancelamento e boletos não pagos GRÁTIS
+- name: Antecipação de recebíveis — tarifa de borderô
+  price_text: 4%*
+  price: 4
+  currency: BRL
+  period: per-use
+  unit: sobre o valor bruto de cada operação
+  overage: limitado ao máximo de R$ 30,00 por borderô
+- name: Consulta Serasa
+  price_text: R$ 14,99 por relatório
+  price: 14.99
+  currency: BRL
+  period: per-use
+  unit: relatório
+- name: Crédito à vista
+  price_text: 3,49%
+  price: 3.49
+  currency: BRL
+  period: per-use
+  unit: por transação
+- name: Crédito parcelado em até 12x
+  price_text: 3,49% + 1,29%*
+  currency: BRL
+  period: per-use
+  unit: 1,29% a cada parcela antecipada
+- name: Crédito parcelado 2x a 6x
+  price_text: 3,99%
+  price: 3.99
+  currency: BRL
+  period: per-use
+  unit: por transação
+- name: Crédito parcelado 7x a 12x
+  price_text: 4,39%
+  price: 4.39
+  currency: BRL
+  period: per-use
+  unit: por transação
+- name: Pix pela API - Receber por QR Code dinâmico
+  price_text: 1,19%
+  price: 1.19
+  currency: BRL
+  period: per-use
+  unit: por recebimento
+- name: Pix Cobrança (Pix Cob e Pix CobV via API)
+  price_text: 1,19%
+  price: 1.19
+  currency: BRL
+  period: per-use
+  unit: por recebimento
+- name: Pix pelo aplicativo
+  price_text: 30 Pix GRÁTIS por mês*
+  price: 30
+  currency: BRL
+  period: month
+  unit: Pix
+  included_quota: 30 Pix grátis por mês; não válido para chave cadastrada na API ou webhook
+  overage: 1,19%
+- name: Pix Automático
+  price_text: R$3,50
+  price: 3.5
+  currency: BRL
+  period: per-use
+  unit: por Pix liquidado
+- name: Transferência bancária (TED) outra titularidade
+  price_text: R$5,00
+  price: 5
+  currency: BRL
+  period: per-use
+  unit: transferência
+- name: Cartão Classic (emissão)
+  price_text: R$9,99
+  price: 9.99
+  currency: BRL
+  period: one-time
+  unit: cartão
+- name: Cartão Empresarial (emissão)
+  price_text: R$12,99
+  price: 12.99
+  currency: BRL
+  period: one-time
+  unit: cartão
+- name: Cartão Platinum Empresarial (emissão)
+  price_text: R$19,99
+  price: 19.99
+  currency: BRL
+  period: one-time
+  unit: cartão
+- name: Cartão pré-pago (emissão)
+  price_text: R$25,00
+  price: 25
+  currency: BRL
+  period: one-time
+  unit: cartão
+- name: Compras no exterior
+  price_text: 5,38% de iOF + 4% de spread
+  currency: BRL
+  period: per-use
+  unit: por compra
