@@ -1,13 +1,7 @@
 {
   "provider": "efi-bank",
   "sources": [
-    "efi-bank-authorization-api-openapi.yml",
-    "efi-bank-carn-api-openapi.yml",
-    "efi-bank-cobran-as-api-openapi.yml",
-    "efi-bank-open-finance-api-openapi.yml",
-    "efi-bank-pix-charges-api-openapi.yml",
-    "efi-bank-pix-payments-api-openapi.yml",
-    "efi-bank-pix-webhooks-api-openapi.yml"
+    "_original/efi-bank-openapi.yml"
   ],
   "outputs": [
     "efi-bank-authorization-api-openapi.yml",
@@ -21,6 +15,18 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "efi-bank-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "efi-bank-authorization-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "efi-bank-carn-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "efi-bank-cobran-as-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "efi-bank-open-finance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "efi-bank-pix-charges-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "efi-bank-pix-payments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "efi-bank-pix-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
