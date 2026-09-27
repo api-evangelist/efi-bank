@@ -199,7 +199,34 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    Txid:
+      name: txid
+      in: path
+      required: true
+      description: Transaction identifier (26-35 alphanumeric characters).
+      schema:
+        type: string
   schemas:
+    Valor:
+      type: object
+      properties:
+        original:
+          type: string
+          example: '123.45'
     Cob:
       allOf:
       - $ref: '#/components/schemas/CobRequest'
@@ -220,28 +247,43 @@ components:
             type: string
           pixCopiaECola:
             type: string
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/LocationRequest'
-      - type: object
-        properties:
-          id:
-            type: integer
-          location:
-            type: string
-          criacao:
-            type: string
-            format: date-time
-    CobList:
+    CobvRequest:
       type: object
       properties:
-        parametros:
+        calendario:
           type: object
-          additionalProperties: true
-        cobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Cob'
+          properties:
+            dataDeVencimento:
+              type: string
+              format: date
+            validadeAposVencimento:
+              type: integer
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+    Devedor:
+      type: object
+      properties:
+        cpf:
+          type: string
+        cnpj:
+          type: string
+        nome:
+          type: string
     Cobv:
       allOf:
       - $ref: '#/components/schemas/CobvRequest'
@@ -255,6 +297,36 @@ components:
             type: string
           pixCopiaECola:
             type: string
+    LocationRequest:
+      type: object
+      properties:
+        tipoCob:
+          type: string
+          enum:
+          - cob
+          - cobv
+    CobList:
+      type: object
+      properties:
+        parametros:
+          type: object
+          additionalProperties: true
+        cobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cob'
+    Location:
+      allOf:
+      - $ref: '#/components/schemas/LocationRequest'
+      - type: object
+        properties:
+          id:
+            type: integer
+          location:
+            type: string
+          criacao:
+            type: string
+            format: date-time
     CobRequest:
       type: object
       properties:
@@ -273,78 +345,6 @@ components:
           description: Pix key (chave) that receives the payment.
         solicitacaoPagador:
           type: string
-    Devedor:
-      type: object
-      properties:
-        cpf:
-          type: string
-        cnpj:
-          type: string
-        nome:
-          type: string
-    Error:
-      type: object
-      properties:
-        nome:
-          type: string
-        mensagem:
-          type: string
-        error:
-          type: string
-        error_description:
-          type: string
-    CobvRequest:
-      type: object
-      properties:
-        calendario:
-          type: object
-          properties:
-            dataDeVencimento:
-              type: string
-              format: date
-            validadeAposVencimento:
-              type: integer
-        devedor:
-          $ref: '#/components/schemas/Devedor'
-        valor:
-          $ref: '#/components/schemas/Valor'
-        chave:
-          type: string
-    Valor:
-      type: object
-      properties:
-        original:
-          type: string
-          example: '123.45'
-    LocationRequest:
-      type: object
-      properties:
-        tipoCob:
-          type: string
-          enum:
-          - cob
-          - cobv
-  parameters:
-    Txid:
-      name: txid
-      in: path
-      required: true
-      description: Transaction identifier (26-35 alphanumeric characters).
-      schema:
-        type: string
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

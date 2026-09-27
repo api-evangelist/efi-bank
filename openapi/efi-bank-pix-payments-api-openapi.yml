@@ -130,22 +130,20 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Pix:
-      type: object
-      properties:
-        endToEndId:
-          type: string
-        txid:
-          type: string
-        valor:
-          type: string
-        horario:
-          type: string
-          format: date-time
-        pagador:
-          type: object
-          additionalProperties: true
     Refund:
       allOf:
       - $ref: '#/components/schemas/RefundRequest'
@@ -161,13 +159,12 @@ components:
             - EM_PROCESSAMENTO
             - DEVOLVIDO
             - NAO_REALIZADO
-    PixList:
+    RefundRequest:
       type: object
       properties:
-        pix:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pix'
+        valor:
+          type: string
+          example: '12.34'
     Error:
       type: object
       properties:
@@ -179,25 +176,28 @@ components:
           type: string
         error_description:
           type: string
-    RefundRequest:
+    Pix:
       type: object
       properties:
+        endToEndId:
+          type: string
+        txid:
+          type: string
         valor:
           type: string
-          example: '12.34'
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+        horario:
+          type: string
+          format: date-time
+        pagador:
+          type: object
+          additionalProperties: true
+    PixList:
+      type: object
+      properties:
+        pix:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pix'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

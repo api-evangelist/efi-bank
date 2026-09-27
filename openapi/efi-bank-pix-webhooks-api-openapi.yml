@@ -103,35 +103,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Webhook:
-      allOf:
-      - $ref: '#/components/schemas/WebhookRequest'
-      - type: object
-        properties:
-          chave:
-            type: string
-          criacao:
-            type: string
-            format: date-time
-    WebhookRequest:
-      type: object
-      properties:
-        webhookUrl:
-          type: string
-          format: uri
     Error:
       type: object
       properties:
@@ -143,6 +127,22 @@ components:
           type: string
         error_description:
           type: string
+    WebhookRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type: string
+          format: uri
+    Webhook:
+      allOf:
+      - $ref: '#/components/schemas/WebhookRequest'
+      - type: object
+        properties:
+          chave:
+            type: string
+          criacao:
+            type: string
+            format: date-time
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

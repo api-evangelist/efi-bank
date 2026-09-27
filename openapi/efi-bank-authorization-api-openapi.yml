@@ -96,6 +96,18 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+        scope:
+          type: string
     Error:
       type: object
       properties:
@@ -113,18 +125,6 @@ components:
         grant_type:
           type: string
           default: client_credentials
-    TokenResponse:
-      type: object
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-          example: Bearer
-        expires_in:
-          type: integer
-        scope:
-          type: string
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2
