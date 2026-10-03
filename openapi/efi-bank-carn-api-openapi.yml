@@ -134,30 +134,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    ChargeItem:
-      type: object
-      properties:
-        name:
-          type: string
-        value:
-          type: integer
-          description: Unit value in cents (centavos).
-        amount:
-          type: integer
     CarnetRequest:
       type: object
       properties:
@@ -174,17 +151,6 @@ components:
         expire_at:
           type: string
           format: date
-    Error:
-      type: object
-      properties:
-        nome:
-          type: string
-        mensagem:
-          type: string
-        error:
-          type: string
-        error_description:
-          type: string
     Carnet:
       type: object
       properties:
@@ -206,6 +172,40 @@ components:
           format: date
         status:
           type: string
+    ChargeItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
+          description: Unit value in cents (centavos).
+        amount:
+          type: integer
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
     CarnetId:
       name: id
