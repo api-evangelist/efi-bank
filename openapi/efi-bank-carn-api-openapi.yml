@@ -134,23 +134,15 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  parameters:
+    CarnetId:
+      name: id
+      in: path
+      required: true
+      description: The carnê identifier.
+      schema:
+        type: integer
   schemas:
-    CarnetRequest:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChargeItem'
-        customer:
-          type: object
-          additionalProperties: true
-        repeats:
-          type: integer
-          description: Number of installments (parcelas).
-        expire_at:
-          type: string
-          format: date
     Carnet:
       type: object
       properties:
@@ -182,6 +174,22 @@ components:
           description: Unit value in cents (centavos).
         amount:
           type: integer
+    CarnetRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        customer:
+          type: object
+          additionalProperties: true
+        repeats:
+          type: integer
+          description: Number of installments (parcelas).
+        expire_at:
+          type: string
+          format: date
     Error:
       type: object
       properties:
@@ -206,14 +214,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    CarnetId:
-      name: id
-      in: path
-      required: true
-      description: The carnê identifier.
-      schema:
-        type: integer
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

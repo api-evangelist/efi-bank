@@ -200,6 +200,64 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    CobvRequest:
+      type: object
+      properties:
+        calendario:
+          type: object
+          properties:
+            dataDeVencimento:
+              type: string
+              format: date
+            validadeAposVencimento:
+              type: integer
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+    CobRequest:
+      type: object
+      properties:
+        calendario:
+          type: object
+          properties:
+            expiracao:
+              type: integer
+              example: 3600
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+          description: Pix key (chave) that receives the payment.
+        solicitacaoPagador:
+          type: string
+    Devedor:
+      type: object
+      properties:
+        cpf:
+          type: string
+        cnpj:
+          type: string
+        nome:
+          type: string
+    Valor:
+      type: object
+      properties:
+        original:
+          type: string
+          example: '123.45'
+    LocationRequest:
+      type: object
+      properties:
+        tipoCob:
+          type: string
+          enum:
+          - cob
+          - cobv
     Cob:
       allOf:
       - $ref: '#/components/schemas/CobRequest'
@@ -220,35 +278,6 @@ components:
             type: string
           pixCopiaECola:
             type: string
-    LocationRequest:
-      type: object
-      properties:
-        tipoCob:
-          type: string
-          enum:
-          - cob
-          - cobv
-    Devedor:
-      type: object
-      properties:
-        cpf:
-          type: string
-        cnpj:
-          type: string
-        nome:
-          type: string
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/LocationRequest'
-      - type: object
-        properties:
-          id:
-            type: integer
-          location:
-            type: string
-          criacao:
-            type: string
-            format: date-time
     Cobv:
       allOf:
       - $ref: '#/components/schemas/CobvRequest'
@@ -262,47 +291,6 @@ components:
             type: string
           pixCopiaECola:
             type: string
-    CobRequest:
-      type: object
-      properties:
-        calendario:
-          type: object
-          properties:
-            expiracao:
-              type: integer
-              example: 3600
-        devedor:
-          $ref: '#/components/schemas/Devedor'
-        valor:
-          $ref: '#/components/schemas/Valor'
-        chave:
-          type: string
-          description: Pix key (chave) that receives the payment.
-        solicitacaoPagador:
-          type: string
-    CobvRequest:
-      type: object
-      properties:
-        calendario:
-          type: object
-          properties:
-            dataDeVencimento:
-              type: string
-              format: date
-            validadeAposVencimento:
-              type: integer
-        devedor:
-          $ref: '#/components/schemas/Devedor'
-        valor:
-          $ref: '#/components/schemas/Valor'
-        chave:
-          type: string
-    Valor:
-      type: object
-      properties:
-        original:
-          type: string
-          example: '123.45'
     CobList:
       type: object
       properties:
@@ -313,6 +301,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Cob'
+    Location:
+      allOf:
+      - $ref: '#/components/schemas/LocationRequest'
+      - type: object
+        properties:
+          id:
+            type: integer
+          location:
+            type: string
+          criacao:
+            type: string
+            format: date-time
     Error:
       type: object
       properties:
@@ -324,19 +324,6 @@ components:
           type: string
         error_description:
           type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
     Txid:
       name: txid
@@ -345,6 +332,19 @@ components:
       description: Transaction identifier (26-35 alphanumeric characters).
       schema:
         type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

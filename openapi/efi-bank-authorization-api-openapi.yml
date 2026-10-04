@@ -88,13 +88,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
     Error:
       type: object
@@ -107,12 +100,6 @@ components:
           type: string
         error_description:
           type: string
-    TokenRequest:
-      type: object
-      properties:
-        grant_type:
-          type: string
-          default: client_credentials
     TokenResponse:
       type: object
       properties:
@@ -125,6 +112,19 @@ components:
           type: integer
         scope:
           type: string
+    TokenRequest:
+      type: object
+      properties:
+        grant_type:
+          type: string
+          default: client_credentials
+  responses:
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

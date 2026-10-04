@@ -210,13 +210,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    ChargeList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Charge'
     ChargeOneStepRequest:
       type: object
       properties:
@@ -228,13 +221,6 @@ components:
           type: object
           description: Payment method - banking_billet, credit_card, or pix.
           additionalProperties: true
-    ChargeRequest:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChargeItem'
     ChargeItem:
       type: object
       properties:
@@ -245,6 +231,20 @@ components:
           description: Unit value in cents (centavos).
         amount:
           type: integer
+    ChargeRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+    ChargeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
     PayChargeRequest:
       type: object
       properties:
@@ -279,14 +279,14 @@ components:
         error_description:
           type: string
   responses:
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
       content:
         application/json:
           schema:

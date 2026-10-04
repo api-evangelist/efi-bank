@@ -73,6 +73,15 @@ components:
           type: string
         name:
           type: string
+    OpenFinancePixPayment:
+      allOf:
+      - $ref: '#/components/schemas/OpenFinancePixRequest'
+      - type: object
+        properties:
+          identifierPayment:
+            type: string
+          status:
+            type: string
     OpenFinancePixRequest:
       type: object
       properties:
@@ -95,15 +104,6 @@ components:
           type: string
         error_description:
           type: string
-    OpenFinancePixPayment:
-      allOf:
-      - $ref: '#/components/schemas/OpenFinancePixRequest'
-      - type: object
-        properties:
-          identifierPayment:
-            type: string
-          status:
-            type: string
   responses:
     Unauthorized:
       description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.

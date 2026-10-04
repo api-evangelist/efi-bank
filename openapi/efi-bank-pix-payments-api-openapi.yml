@@ -131,27 +131,6 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Refund:
-      allOf:
-      - $ref: '#/components/schemas/RefundRequest'
-      - type: object
-        properties:
-          id:
-            type: string
-          rtrId:
-            type: string
-          status:
-            type: string
-            enum:
-            - EM_PROCESSAMENTO
-            - DEVOLVIDO
-            - NAO_REALIZADO
-    RefundRequest:
-      type: object
-      properties:
-        valor:
-          type: string
-          example: '12.34'
     Pix:
       type: object
       properties:
@@ -167,6 +146,34 @@ components:
         pagador:
           type: object
           additionalProperties: true
+    Refund:
+      allOf:
+      - $ref: '#/components/schemas/RefundRequest'
+      - type: object
+        properties:
+          id:
+            type: string
+          rtrId:
+            type: string
+          status:
+            type: string
+            enum:
+            - EM_PROCESSAMENTO
+            - DEVOLVIDO
+            - NAO_REALIZADO
+    PixList:
+      type: object
+      properties:
+        pix:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pix'
+    RefundRequest:
+      type: object
+      properties:
+        valor:
+          type: string
+          example: '12.34'
     Error:
       type: object
       properties:
@@ -178,22 +185,15 @@ components:
           type: string
         error_description:
           type: string
-    PixList:
-      type: object
-      properties:
-        pix:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pix'
   responses:
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
       content:
         application/json:
           schema:
