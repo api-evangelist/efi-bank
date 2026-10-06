@@ -51,7 +51,7 @@ tags:
 - Financial Infrastructure
 - Fintech
 created: '2026-07-12'
-modified: '2026-07-12'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: efi-bank:efi-bank-authorization-api
@@ -227,6 +227,8 @@ apis:
   - type: Documentation
     url: https://dev.efipay.com.br/docs/api-open-finance/credenciais
 common:
+- url: https://sejaefi.com.br/blog
+  type: Blog
 - type: Pricing
   url: https://sejaefi.com.br/tarifas
 - type: CapabilityMap
