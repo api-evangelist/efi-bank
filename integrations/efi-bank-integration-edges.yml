@@ -1,0 +1,18 @@
+generated: '2026-10-12'
+method: none
+source:
+- https://zapier.com/apps/efi-bank/integrations
+- https://zapier.com/apps/ef/integrations
+- https://n8n.io/integrations/efi-bank/
+- https://composio.dev/toolkits/efi-bank
+- https://monid.ai/tools/efi-bank
+checked:
+- https://composio.dev/toolkits/efi-bank
+- https://monid.ai/tools/efi-bank
+- https://n8n.io/integrations/efi-bank/
+- https://zapier.com/apps/ef/integrations
+- https://zapier.com/apps/efi-bank/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []
