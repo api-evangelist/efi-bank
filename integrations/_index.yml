@@ -108,3 +108,30 @@
     detected: '2026-10-15'
   status: not-a-workflow
   arazzo: null
+- slug: efi-bank-n8n
+  label: n8n
+  partner: n8n
+  partner_name: n8n
+  type: marketplace
+  marketplace: n8n-community
+  channel: open-source-node
+  evidence: https://www.npmjs.com/package/n8n-nodes-efibank
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: n8n community nodes (npm keyword n8n-community-node-package)
+    spec_file: null
+    role: ipaas-connector:n8n-community
+    registered_name: n8n-nodes-efibank
+    matched_domain: sejaefi.com.br
+    matched_by: domain+name-among-holders
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    package: n8n-nodes-efibank
+    version: 1.1.0
+    published: '2026-06-18T19:22:58.809Z'
+    matched_on: publisher-email
+    builder: provider (package published from the provider's own domain)
+  status: pending-generation
+  arazzo: null
