@@ -66,22 +66,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    Participant:
-      type: object
-      properties:
-        identification:
-          type: string
-        name:
-          type: string
-    OpenFinancePixPayment:
-      allOf:
-      - $ref: '#/components/schemas/OpenFinancePixRequest'
-      - type: object
-        properties:
-          identifierPayment:
-            type: string
-          status:
-            type: string
     OpenFinancePixRequest:
       type: object
       properties:
@@ -93,6 +77,15 @@ components:
         pix:
           type: object
           additionalProperties: true
+    OpenFinancePixPayment:
+      allOf:
+      - $ref: '#/components/schemas/OpenFinancePixRequest'
+      - type: object
+        properties:
+          identifierPayment:
+            type: string
+          status:
+            type: string
     Error:
       type: object
       properties:
@@ -103,6 +96,13 @@ components:
         error:
           type: string
         error_description:
+          type: string
+    Participant:
+      type: object
+      properties:
+        identification:
+          type: string
+        name:
           type: string
   responses:
     Unauthorized:

@@ -209,7 +209,58 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  parameters:
+    ChargeId:
+      name: id
+      in: path
+      required: true
+      description: The charge (transação) identifier.
+      schema:
+        type: integer
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Charge:
+      type: object
+      properties:
+        charge_id:
+          type: integer
+        status:
+          type: string
+        total:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
+        payment:
+          type: object
+          additionalProperties: true
+    ChargeList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    ChargeRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChargeItem'
     ChargeOneStepRequest:
       type: object
       properties:
@@ -231,39 +282,9 @@ components:
           description: Unit value in cents (centavos).
         amount:
           type: integer
-    ChargeRequest:
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChargeItem'
-    ChargeList:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Charge'
     PayChargeRequest:
       type: object
       properties:
-        payment:
-          type: object
-          additionalProperties: true
-    Charge:
-      type: object
-      properties:
-        charge_id:
-          type: integer
-        status:
-          type: string
-        total:
-          type: integer
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChargeItem'
         payment:
           type: object
           additionalProperties: true
@@ -278,27 +299,6 @@ components:
           type: string
         error_description:
           type: string
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid OAuth2 token, or (on Pix / Open Finance) a missing or invalid mTLS certificate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    ChargeId:
-      name: id
-      in: path
-      required: true
-      description: The charge (transação) identifier.
-      schema:
-        type: integer
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

@@ -102,34 +102,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  schemas:
-    WebhookRequest:
-      type: object
-      properties:
-        webhookUrl:
-          type: string
-          format: uri
-    Webhook:
-      allOf:
-      - $ref: '#/components/schemas/WebhookRequest'
-      - type: object
-        properties:
-          chave:
-            type: string
-          criacao:
-            type: string
-            format: date-time
-    Error:
-      type: object
-      properties:
-        nome:
-          type: string
-        mensagem:
-          type: string
-        error:
-          type: string
-        error_description:
-          type: string
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -143,6 +115,34 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  schemas:
+    WebhookRequest:
+      type: object
+      properties:
+        webhookUrl:
+          type: string
+          format: uri
+    Error:
+      type: object
+      properties:
+        nome:
+          type: string
+        mensagem:
+          type: string
+        error:
+          type: string
+        error_description:
+          type: string
+    Webhook:
+      allOf:
+      - $ref: '#/components/schemas/WebhookRequest'
+      - type: object
+        properties:
+          chave:
+            type: string
+          criacao:
+            type: string
+            format: date-time
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

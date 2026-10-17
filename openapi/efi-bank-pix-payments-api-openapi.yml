@@ -131,21 +131,17 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
-    Pix:
+    Error:
       type: object
       properties:
-        endToEndId:
+        nome:
           type: string
-        txid:
+        mensagem:
           type: string
-        valor:
+        error:
           type: string
-        horario:
+        error_description:
           type: string
-          format: date-time
-        pagador:
-          type: object
-          additionalProperties: true
     Refund:
       allOf:
       - $ref: '#/components/schemas/RefundRequest'
@@ -168,23 +164,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Pix'
+    Pix:
+      type: object
+      properties:
+        endToEndId:
+          type: string
+        txid:
+          type: string
+        valor:
+          type: string
+        horario:
+          type: string
+          format: date-time
+        pagador:
+          type: object
+          additionalProperties: true
     RefundRequest:
       type: object
       properties:
         valor:
           type: string
           example: '12.34'
-    Error:
-      type: object
-      properties:
-        nome:
-          type: string
-        mensagem:
-          type: string
-        error:
-          type: string
-        error_description:
-          type: string
   responses:
     NotFound:
       description: The requested resource was not found.

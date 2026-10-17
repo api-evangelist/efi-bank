@@ -200,50 +200,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    CobvRequest:
-      type: object
-      properties:
-        calendario:
-          type: object
-          properties:
-            dataDeVencimento:
-              type: string
-              format: date
-            validadeAposVencimento:
-              type: integer
-        devedor:
-          $ref: '#/components/schemas/Devedor'
-        valor:
-          $ref: '#/components/schemas/Valor'
-        chave:
-          type: string
-    CobRequest:
-      type: object
-      properties:
-        calendario:
-          type: object
-          properties:
-            expiracao:
-              type: integer
-              example: 3600
-        devedor:
-          $ref: '#/components/schemas/Devedor'
-        valor:
-          $ref: '#/components/schemas/Valor'
-        chave:
-          type: string
-          description: Pix key (chave) that receives the payment.
-        solicitacaoPagador:
-          type: string
-    Devedor:
-      type: object
-      properties:
-        cpf:
-          type: string
-        cnpj:
-          type: string
-        nome:
-          type: string
     Valor:
       type: object
       properties:
@@ -258,6 +214,18 @@ components:
           enum:
           - cob
           - cobv
+    Location:
+      allOf:
+      - $ref: '#/components/schemas/LocationRequest'
+      - type: object
+        properties:
+          id:
+            type: integer
+          location:
+            type: string
+          criacao:
+            type: string
+            format: date-time
     Cob:
       allOf:
       - $ref: '#/components/schemas/CobRequest'
@@ -278,6 +246,33 @@ components:
             type: string
           pixCopiaECola:
             type: string
+    CobvRequest:
+      type: object
+      properties:
+        calendario:
+          type: object
+          properties:
+            dataDeVencimento:
+              type: string
+              format: date
+            validadeAposVencimento:
+              type: integer
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+    CobList:
+      type: object
+      properties:
+        parametros:
+          type: object
+          additionalProperties: true
+        cobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cob'
     Cobv:
       allOf:
       - $ref: '#/components/schemas/CobvRequest'
@@ -291,28 +286,15 @@ components:
             type: string
           pixCopiaECola:
             type: string
-    CobList:
+    Devedor:
       type: object
       properties:
-        parametros:
-          type: object
-          additionalProperties: true
-        cobs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Cob'
-    Location:
-      allOf:
-      - $ref: '#/components/schemas/LocationRequest'
-      - type: object
-        properties:
-          id:
-            type: integer
-          location:
-            type: string
-          criacao:
-            type: string
-            format: date-time
+        cpf:
+          type: string
+        cnpj:
+          type: string
+        nome:
+          type: string
     Error:
       type: object
       properties:
@@ -324,14 +306,24 @@ components:
           type: string
         error_description:
           type: string
-  parameters:
-    Txid:
-      name: txid
-      in: path
-      required: true
-      description: Transaction identifier (26-35 alphanumeric characters).
-      schema:
-        type: string
+    CobRequest:
+      type: object
+      properties:
+        calendario:
+          type: object
+          properties:
+            expiracao:
+              type: integer
+              example: 3600
+        devedor:
+          $ref: '#/components/schemas/Devedor'
+        valor:
+          $ref: '#/components/schemas/Valor'
+        chave:
+          type: string
+          description: Pix key (chave) that receives the payment.
+        solicitacaoPagador:
+          type: string
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -345,6 +337,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    Txid:
+      name: txid
+      in: path
+      required: true
+      description: Transaction identifier (26-35 alphanumeric characters).
+      schema:
+        type: string
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2

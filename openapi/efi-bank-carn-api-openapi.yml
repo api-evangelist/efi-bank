@@ -134,26 +134,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    CarnetId:
-      name: id
-      in: path
-      required: true
-      description: The carnê identifier.
-      schema:
-        type: integer
   schemas:
-    Carnet:
-      type: object
-      properties:
-        carnet_id:
-          type: integer
-        status:
-          type: string
-        charges:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarnetParcel'
     CarnetParcel:
       type: object
       properties:
@@ -164,16 +145,6 @@ components:
           format: date
         status:
           type: string
-    ChargeItem:
-      type: object
-      properties:
-        name:
-          type: string
-        value:
-          type: integer
-          description: Unit value in cents (centavos).
-        amount:
-          type: integer
     CarnetRequest:
       type: object
       properties:
@@ -190,6 +161,27 @@ components:
         expire_at:
           type: string
           format: date
+    Carnet:
+      type: object
+      properties:
+        carnet_id:
+          type: integer
+        status:
+          type: string
+        charges:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarnetParcel'
+    ChargeItem:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: integer
+          description: Unit value in cents (centavos).
+        amount:
+          type: integer
     Error:
       type: object
       properties:
@@ -214,6 +206,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    CarnetId:
+      name: id
+      in: path
+      required: true
+      description: The carnê identifier.
+      schema:
+        type: integer
   securitySchemes:
     oAuth2ClientCredentials:
       type: oauth2
