@@ -15,9 +15,52 @@ checked:
 - https://www.bcb.gov.br/estabilidadefinanceira/participantespix
 - https://zapier.com/apps/ef/integrations
 - https://zapier.com/apps/efi-bank/integrations
+- n8n/integrations/n8n-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
+- partner_name: n8n
+  partner: n8n
+  partner_match: aggregator
+  type: marketplace
+  marketplace: n8n-community
+  channel: open-source-node
+  relationship: ipaas-bridge
+  direction: provider-built
+  evidence: https://www.npmjs.com/package/n8n-nodes-efibank
+  category: null
+  contract_reference:
+    register: n8n community nodes (npm keyword n8n-community-node-package)
+    spec_file: null
+    role: ipaas-connector:n8n-community
+    registered_name: n8n-nodes-efibank
+    matched_domain: sejaefi.com.br
+    matched_by: domain+name-among-holders
+    detected_by: sweep-workflow-automation.py
+    detected: '2026-10-15'
+    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
+    package: n8n-nodes-efibank
+    version: 1.1.0
+    published: '2026-06-18T19:22:58.809Z'
+    matched_on: publisher-email
+    builder: provider (package published from the provider's own domain)
+  detected_by: sweep-workflow-automation.py
+  first_seen: '2026-10-15'
+- partner_name: n8n (n8n-community)
+  partner: n8n
+  partner_match: mirror
+  mirror_match: domain+name-among-holders
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: n8n-community
+  evidence: https://www.npmjs.com/package/n8n-nodes-efibank
+  mirror_of: n8n/integrations/n8n-integration-edges.yml
+  apps: []
+  listing_count: 1
+  detected: '2026-10-19'
+  detected_by: mirror-platform-listings.py
 - partner_name: Open Finance Brasil
   partner: null
   partner_match: register
@@ -102,7 +145,7 @@ edges:
   evidence: https://www.bcb.gov.br/estabilidadefinanceira/participantespix
   category: instant payments (Brazil)
   contract_reference:
-    register: Pix participants (Banco Central do Brasil, https://www.bcb.gov.br/content/estabilidadefinanceira/participantes_pix/lista-participantes-instituicoes-em-adesao-pix-20261015.csv)
+    register: Pix participants (Banco Central do Brasil, https://www.bcb.gov.br/content/estabilidadefinanceira/participantes_pix/lista-participantes-instituicoes-em-adesao-pix-20261020.csv)
     spec_file: null
     standard: Pix
     role: pix-participant
@@ -120,34 +163,7 @@ edges:
       identity: Open Finance Brasil directory, same CNPJ 09089356000118 ('EFI S.A. - INSTITUICAO DE PAGAMENTO')
     signal_note: 'participation only: the domain comes from a labelled lookup (registrations[].identity)'
     detected_by: sweep-latam-open-finance.py
-    detected: '2026-10-15'
+    detected: '2026-10-19'
   detected_by: sweep-latam-open-finance.py
-  first_seen: '2026-10-15'
-- partner_name: n8n
-  partner: n8n
-  partner_match: aggregator
-  type: marketplace
-  marketplace: n8n-community
-  channel: open-source-node
-  relationship: ipaas-bridge
-  direction: provider-built
-  evidence: https://www.npmjs.com/package/n8n-nodes-efibank
-  category: null
-  contract_reference:
-    register: n8n community nodes (npm keyword n8n-community-node-package)
-    spec_file: null
-    role: ipaas-connector:n8n-community
-    registered_name: n8n-nodes-efibank
-    matched_domain: sejaefi.com.br
-    matched_by: domain+name-among-holders
-    detected_by: sweep-workflow-automation.py
-    detected: '2026-10-15'
-    signal_note: one edge per (provider, platform); actions, triggers and usage counts are context, never read
-    package: n8n-nodes-efibank
-    version: 1.1.0
-    published: '2026-06-18T19:22:58.809Z'
-    matched_on: publisher-email
-    builder: provider (package published from the provider's own domain)
-  detected_by: sweep-workflow-automation.py
   first_seen: '2026-10-15'
 templates: []
