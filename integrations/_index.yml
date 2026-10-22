@@ -147,3 +147,38 @@
     detected: '2026-10-19'
   status: not-a-workflow
   arazzo: null
+- slug: efi-bank-banco-central-do-brasil-authorized-payment-institutions-institui-es-de-pagamento
+  label: Banco Central do Brasil authorized payment institutions (Instituições de Pagamento)
+  partner_name: Banco Central do Brasil authorized payment institutions (Instituições de Pagamento)
+  category: Brazil BCB-authorized payment institution (IP)
+  type: register
+  channel: regulator-register
+  evidence: https://www.bcb.gov.br/estabilidadefinanceira/relacao_instituicoes_funcionamento
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Banco Central do Brasil authorized payment institutions (Instituições de Pagamento)
+    spec_file: null
+    standard: null
+    role: authorized-payment-institution
+    institution_class: fintech
+    registrations:
+    - registered_name: EFÍ S.A. - INSTITUIÇÃO DE PAGAMENTO
+      register_status: authorized-active
+      register_country: BR
+      register_id: CNPJ 09089356
+      segment: Instituição de Pagamento
+      matched_domain: sejaefi.com.br
+      matched_by: domain+local-verified
+      evidence_url: https://www.bcb.gov.br/estabilidadefinanceira/relacao_instituicoes_funcionamento
+      licences:
+      - Instituição de Pagamento
+      situation: Autorizada em Atividade
+      tariff_list_confirmed: true
+      domain_source: bcb-verified-own-domain
+    signal_note: 'participation only: a Banco Central do Brasil authorisation to operate; no API conformance is
+      published by this register'
+    detected_by: sweep-brazil-bcb-authorized-institutions.py
+    detected: '2026-10-22'
+  status: not-a-workflow
+  arazzo: null

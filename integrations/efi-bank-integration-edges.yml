@@ -16,6 +16,10 @@ checked:
 - https://zapier.com/apps/ef/integrations
 - https://zapier.com/apps/efi-bank/integrations
 - n8n/integrations/n8n-integration-edges.yml
+- https://dadosabertos.bcb.gov.br/api/3/action/package_show?id=relacao-de-instituicoes-em-funcionamento-no-pais
+- https://olinda.bcb.gov.br/olinda/servico/BcBase/versao/v2/odata/
+- https://olinda.bcb.gov.br/olinda/servico/Informes_ListaTarifasPorInstituicaoFinanceira/versao/v1/odata/
+- https://olinda.bcb.gov.br/olinda/servico/Instituicoes_em_funcionamento/versao/v1/odata/
 summary: null
 marketplace_apps: []
 edges:
@@ -166,4 +170,39 @@ edges:
     detected: '2026-10-19'
   detected_by: sweep-latam-open-finance.py
   first_seen: '2026-10-15'
+- partner_name: Banco Central do Brasil authorized payment institutions (Instituições de Pagamento)
+  partner: null
+  partner_match: register
+  type: register
+  channel: regulator-register
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://www.bcb.gov.br/estabilidadefinanceira/relacao_instituicoes_funcionamento
+  category: Brazil BCB-authorized payment institution (IP)
+  contract_reference:
+    register: Banco Central do Brasil authorized payment institutions (Instituições de Pagamento)
+    spec_file: null
+    standard: null
+    role: authorized-payment-institution
+    institution_class: fintech
+    registrations:
+    - registered_name: EFÍ S.A. - INSTITUIÇÃO DE PAGAMENTO
+      register_status: authorized-active
+      register_country: BR
+      register_id: CNPJ 09089356
+      segment: Instituição de Pagamento
+      matched_domain: sejaefi.com.br
+      matched_by: domain+local-verified
+      evidence_url: https://www.bcb.gov.br/estabilidadefinanceira/relacao_instituicoes_funcionamento
+      licences:
+      - Instituição de Pagamento
+      situation: Autorizada em Atividade
+      tariff_list_confirmed: true
+      domain_source: bcb-verified-own-domain
+    signal_note: 'participation only: a Banco Central do Brasil authorisation to operate; no API conformance is
+      published by this register'
+    detected_by: sweep-brazil-bcb-authorized-institutions.py
+    detected: '2026-10-22'
+  detected_by: sweep-brazil-bcb-authorized-institutions.py
+  first_seen: '2026-10-22'
 templates: []
