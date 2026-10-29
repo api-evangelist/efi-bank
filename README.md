@@ -1,4 +1,4 @@
-# Efí (efi-bank)
+# Efí
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,179 +64,131 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Efí (formerly **Gerencianet**) is a Brazilian payment institution ("Instituição de Pagamento", CNPJ 09.089.356/0001-18) and digital bank. It publishes a set of well-documented public REST APIs for the Brazilian financial system: Pix (immediate and dated charges, send/receive, refunds, webhooks), Boletos and Charges (Cobranças), Carnê installment booklets, and Pix via Open Finance. The company rebranded from Gerencianet to Efí; older SDKs, host names, and OAuth scope prefixes (e.g. `gn.`) still reflect the Gerencianet lineage.
+Efí (formerly Gerencianet) is a Brazilian payment institution and digital bank that exposes well-documented public REST APIs for the Brazilian financial system - Pix (immediate and dated charges, send/receive, refunds, webhooks), Boletos and Charges (Cobranças), Carnê installment booklets, subscriptions and payment links, Pix via Open Finance, and account financial services. Pix and Open Finance APIs require OAuth2 client-credentials plus a mutual TLS (mTLS) client certificate as mandated by the Brazilian Central Bank; the Cobranças API uses OAuth2 without mTLS.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/efi-bank/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/efi-bank/refs/heads/main/apis.yml)
+**Areas:** Payments · Pix · Boleto · Banking · Brazil · Latin America · Charges · Digital Account · Financial Infrastructure · Fintech
 
-## Access Model (Honest Summary)
+## Efí on APIs.io
 
-Efí's APIs are **live, public, and production-grade**, but the auth model differs by product host:
+Everything profiled for Efí is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/efi-bank/](https://apis.io/providers/efi-bank/)** — or go straight to one of the APIs or properties below.
 
-- **Pix API** — base `https://pix.api.efipay.com.br` (sandbox `https://pix-h.api.efipay.com.br`). Requires **OAuth2 client-credentials** (token at `POST /oauth/token`, HTTP Basic with `Client_Id`/`Client_Secret`) **PLUS a mandatory mutual TLS (mTLS) client certificate** (`.p12`/`.pem`) on *every* request — this is a Brazilian Central Bank (BACEN) requirement for the Pix arrangement, not an Efí choice.
-- **Pix via Open Finance API** — base `https://openfinance.api.efipay.com.br` (sandbox `https://openfinance-h.api.efipay.com.br`). Also requires **OAuth2 client-credentials (token at `POST /v1/oauth/token`) PLUS mTLS**.
-- **Cobranças (Charges) API** — base `https://cobrancas.api.efipay.com.br` (sandbox `https://cobrancas-h.api.efipay.com.br`). Uses **OAuth2 client-credentials** (token at `POST /v1/authorize`, HTTP Basic). **No mTLS certificate required.**
+### APIs (7)
 
-You obtain `Client_Id` / `Client_Secret` and generate the mTLS certificate inside the Efí account dashboard. SDKs are published for PHP, Node.js, Python, Java, Go, Ruby, Delphi, TypeScript, and Flutter, plus e-commerce modules (WooCommerce, WordPress, PrestaShop, Magento 2, OpenCart, WHMCS).
+- [Efí Authorization API](https://apis.io/apis/efi-bank/efi-bank-authorization-api/) — OAuth2 client-credentials token endpoints (per host).
+- [Efí Carnê API](https://apis.io/apis/efi-bank/efi-bank-carn-api/) — Installment booklets. Host cobrancas.api.efipay.com.br, no mTLS.
+- [Efí Cobranças API](https://apis.io/apis/efi-bank/efi-bank-cobran-as-api/) — Boleto / card / Pix charges. Host cobrancas.api.efipay.com.br, no mTLS.
+- [Efí Open Finance API](https://apis.io/apis/efi-bank/efi-bank-open-finance-api/) — Pix payment initiation via Open Finance. Host openfinance.api.efipay.com.br, mTLS required.
+- [Efí Pix Charges API](https://apis.io/apis/efi-bank/efi-bank-pix-charges-api/) — Immediate (cob) and dated (cobv) Pix charges and payload locations. Host pix.api.efipay.com.br, mTLS required.
+- [Efí Pix Payments API](https://apis.io/apis/efi-bank/efi-bank-pix-payments-api/) — Received Pix, sent Pix, and refunds. Host pix.api.efipay.com.br, mTLS required.
+- [Efí Pix Webhooks API](https://apis.io/apis/efi-bank/efi-bank-pix-webhooks-api/) — Webhook registration for received-Pix notifications. Host pix.api.efipay.com.br, mTLS required.
 
-The **create/query charge**, **webhook**, **Cobranças charge**, and **Carnê** operations in this repository were confirmed directly against Efí's public documentation. The dated-charge (`cobv`), received-Pix (`pix`), refund (`devolução`), payload-location (`loc`), and Open Finance path operations are **modeled** on the BACEN Pix API v2 standard that Efí implements and on Efí's documented OAuth scopes; treat their exact paths as representative. See `review.yml` for the confirmed-vs-modeled breakdown.
+### Published properties
 
-## Tags
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- Payments
-- Pix
-- Boleto
-- Banking
-- Brazil
-- Latin America
-- Charges
-- Digital Account
-- Financial Infrastructure
-- Fintech
+#### Agentic access (1)
 
-## Timestamps
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Created:** 2026-07-12
-- **Modified:** 2026-07-12
+- [Efi Bank Agentic Access](https://apis.io/agentic-access/efi-bank/efi-bank-agentic-access/)
 
-## APIs
+#### Collections (8)
 
-### Efí Pix Charges API
+Postman and Open Collection request collections.
 
-Create and manage Pix charges — immediate charges (cob) and dated charges with due date (cobv) — plus payload locations (loc) that generate the dynamic QR Code and Pix Copia e Cola payload. Requires OAuth2 client-credentials and a mandatory mTLS certificate.
+- [Efí (formerly Gerencianet) Payments API](https://apis.io/collections/efi-bank/open-efi-bank/)
+- [Efí (formerly Gerencianet) Payments Authorization API](https://apis.io/collections/efi-bank/open-efi-bank-authorization-api/)
+- [Efí (formerly Gerencianet) Payments Authorization Carnê API](https://apis.io/collections/efi-bank/open-efi-bank-carn-api/)
+- [Efí (formerly Gerencianet) Payments Authorization Cobranças API](https://apis.io/collections/efi-bank/open-efi-bank-cobran-as-api/)
+- [Efí (formerly Gerencianet) Payments Authorization Open Finance API](https://apis.io/collections/efi-bank/open-efi-bank-open-finance-api/)
+- [Efí (formerly Gerencianet) Payments Authorization Pix Charges API](https://apis.io/collections/efi-bank/open-efi-bank-pix-charges-api/)
+- [Efí (formerly Gerencianet) Payments Authorization Pix Payments API](https://apis.io/collections/efi-bank/open-efi-bank-pix-payments-api/)
+- [Efí (formerly Gerencianet) Payments Authorization Pix Webhooks API](https://apis.io/collections/efi-bank/open-efi-bank-pix-webhooks-api/)
 
-- **Human URL:** [https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas](https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas)
-- **Base URL:** `https://pix.api.efipay.com.br`
+#### Security (2)
 
-#### Tags
+Authentication, trust centre, and vulnerability disclosure.
 
-- Pix
-- Charges
-- QR Code
-- Brazil
+- [Efi Bank Authentication](https://apis.io/security/efi-bank/efi-bank-authentication/)
+- [Efi Bank Domain Security](https://apis.io/security/efi-bank/efi-bank-domain-security/)
 
-#### Properties
+#### Plans and pricing (2)
 
-- [Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais)
-- [API Reference](https://dev.efipay.com.br/docs/api-pix/cobrancas-imediatas)
-- [OpenAPI](openapi/efi-bank-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/efi-bank.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/efi-bank.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Published plans, tiers and prices.
 
-### Efí Pix Payments API
+- [Efi Bank Plans Pricing](https://apis.io/plans/efi-bank/efi-bank-plans-pricing/)
+- [Efi Bank Price Estimates](https://apis.io/plans/efi-bank/efi-bank-price-estimates/)
 
-Consult received Pix (Cash-In), send Pix directly from the API (Cash-Out), and request or query refunds (devolução) tied to an end-to-end identifier. Requires OAuth2 client-credentials and a mandatory mTLS certificate.
+#### Rate limits (1)
 
-- **Human URL:** [https://dev.efipay.com.br/docs/api-pix/pix](https://dev.efipay.com.br/docs/api-pix/pix)
-- **Base URL:** `https://pix.api.efipay.com.br`
+Published request limits.
 
-#### Tags
+- [Efi Bank Rate Limits](https://apis.io/rate-limits/efi-bank/efi-bank-rate-limits/)
 
-- Pix
-- Payments
-- Refunds
-- Cash Out
+#### FinOps (1)
 
-#### Properties
+What the API costs to run, by operation.
 
-- [Documentation](https://dev.efipay.com.br/docs/api-pix/credenciais)
-- [OpenAPI](openapi/efi-bank-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/efi-bank.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/efi-bank.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Efi Bank Finops](https://apis.io/finops/efi-bank/efi-bank-finops/)
 
-### Efí Pix Webhooks API
+## Where to find this API
 
-Register, retrieve, and cancel webhooks that notify your application about received Pix, keyed to a Pix key (chave). Server-to-endpoint HTTPS callbacks, not a WebSocket. Requires OAuth2 client-credentials and a mandatory mTLS certificate.
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- **Human URL:** [https://dev.efipay.com.br/docs/api-pix/webhooks](https://dev.efipay.com.br/docs/api-pix/webhooks)
-- **Base URL:** `https://pix.api.efipay.com.br`
-
-#### Tags
-
-- Pix
-- Webhooks
-- Notifications
-
-#### Properties
-
-- [API Reference](https://dev.efipay.com.br/docs/api-pix/webhooks)
-- [OpenAPI](openapi/efi-bank-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/efi-bank.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/efi-bank.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Efí Cobranças (Charges) API
-
-Issue and manage charges (transações) payable by boleto bancário, credit card, or Pix — one-step or two-step creation, due-date changes, manual settlement (baixa), cancellation, resend, and history. Uses OAuth2 client-credentials over HTTP Basic; no mTLS certificate required.
-
-- **Human URL:** [https://dev.efipay.com.br/docs/api-cobrancas/boleto](https://dev.efipay.com.br/docs/api-cobrancas/boleto)
-- **Base URL:** `https://cobrancas.api.efipay.com.br`
-
-#### Tags
-
-- Boleto
-- Charges
-- Checkout
-- Brazil
-
-#### Properties
-
-- [Documentation](https://dev.efipay.com.br/docs/api-cobrancas/credenciais)
-- [API Reference](https://dev.efipay.com.br/docs/api-cobrancas/boleto)
-- [OpenAPI](openapi/efi-bank-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/efi-bank.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/efi-bank.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Efí Carnê API
-
-Generate and manage carnês — a batch of installment charges (parcelas) issued together as a booklet. Create a carnê, change parcel due dates, cancel or settle the whole booklet or individual parcels, and resend by email. Uses OAuth2 client-credentials; no mTLS certificate required.
-
-- **Human URL:** [https://dev.efipay.com.br/docs/api-cobrancas/carne](https://dev.efipay.com.br/docs/api-cobrancas/carne)
-- **Base URL:** `https://cobrancas.api.efipay.com.br`
-
-#### Tags
-
-- Carnê
-- Installments
-- Boleto
-
-#### Properties
-
-- [API Reference](https://dev.efipay.com.br/docs/api-cobrancas/carne)
-- [OpenAPI](openapi/efi-bank-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/efi-bank.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/efi-bank.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Efí Pix via Open Finance API
-
-Initiate Pix payments as a payment initiator across banks and fintechs connected to Brazil's Open Finance ecosystem, query participants, and consult or reverse initiated payments. Requires OAuth2 client-credentials and a mandatory mTLS certificate.
-
-- **Human URL:** [https://dev.efipay.com.br/docs/api-open-finance/credenciais](https://dev.efipay.com.br/docs/api-open-finance/credenciais)
-- **Base URL:** `https://openfinance.api.efipay.com.br`
-
-#### Tags
-
-- Open Finance
-- Pix
-- Payment Initiation
-
-#### Properties
-
-- [Documentation](https://dev.efipay.com.br/docs/api-open-finance/credenciais)
-- [OpenAPI](openapi/efi-bank-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/efi-bank.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/efi-bank.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [Domain Security](security/efi-bank-domain-security.yml)
-- [Authentication](authentication/efi-bank-authentication.yml)
 - [Website](https://sejaefi.com.br)
 - [Documentation](https://dev.efipay.com.br)
-- [LinkedIn](https://www.linkedin.com/company/efibank)
-- [Plans](plans/efi-bank-plans-pricing.yml)
-- [Rate Limits](rate-limits/efi-bank-rate-limits.yml)
-- [Fin Ops](finops/efi-bank-finops.yml)
+- [Pricing](https://sejaefi.com.br/tarifas)
+- [Blog](https://sejaefi.com.br/blog)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 32.7** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 51.3 |
+| Contract governance | 0.0 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 31.0 |
+| Access clarity | 42.1 |
+
+**Agent readiness 22.5** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 9.4** — Banking & Open Finance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/efi-bank/](https://apis.io/providers/efi-bank/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Efí: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/efi-bank/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
